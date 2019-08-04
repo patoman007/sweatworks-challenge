@@ -1,0 +1,14 @@
+<mat-list role="list">
+  <ng-container *ngIf="authors && authors.length > 0; else loadingTemplate">
+    <ng-container *ngFor="let author of authors">
+      <mat-list-item role="listitem">{{ author.lastName }}, {{ author.firstName }}</mat-list-item>
+    </ng-container>
+  </ng-container>
+</mat-list>
+
+<ng-template #loadingTemplate>
+  <div class="loading">
+    <app-cube-spinner></app-cube-spinner>
+    <p>{{ data.labels.loading }}</p>
+  </div>
+</ng-template>

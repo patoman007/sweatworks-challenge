@@ -1,0 +1,55 @@
+<ng-container *ngIf="model && model.type === 'basic'">
+  <button mat-button
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick()">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'raised'">
+  <button mat-raised-button
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'flat'">
+  <button mat-flat-button
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'stroked'">
+  <button mat-stroked-button
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'icon'">
+  <button mat-icon-button
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'fab'">
+  <button mat-fab
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'mini-fab'">
+  <button mat-mini-fab
+          [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
+          (click)="model.onClick">
+    {{ model.label }}
+  </button>
+</ng-container>
