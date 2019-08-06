@@ -1,0 +1,10 @@
+<div class="search-bar-container" *ngIf="model">
+  <label for="search">{{ model.label }}</label>
+  <input id="search" type="text"
+         [placeholder]="model.placeholder"
+         autocomplete="off"
+         #searchInput>
+  <button (click)="clear()" *ngIf="model.shouldShowClearButton">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

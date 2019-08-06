@@ -1,6 +1,5 @@
 <div class="container">
   <app-ui-section-header [title]="data.labels.header"></app-ui-section-header>
-
   <ng-container *ngIf="data.loadingPublications; else publicationsListTemplate">
     <app-ui-progress-bar [label]="data.labels.loadingPublications"></app-ui-progress-bar>
   </ng-container>
@@ -8,20 +7,42 @@
 
 <ng-template #publicationsListTemplate>
   <ng-container *ngIf="data.publications && data.publications.length > 0; else emptyPublicationsListTemplate">
-    <ul>
-      <ng-container *ngFor="let publication of data.publications">
-        <app-publication [model]="publication"></app-publication>
+    <div class="publications-list">
+      <ng-container *ngTemplateOutlet="publicationsListHeaderTemplate"></ng-container>
+
+      <ng-container *ngIf="emptySearchResult; else publicationsListContentTemplate">
+        <app-ui-alert-message [model]="data.emptySearchResultMessage"></app-ui-alert-message>
       </ng-container>
-    </ul>
+    </div>
   </ng-container>
 
   <ng-container *ngIf="data.loadingError">
     <div class="error-message">
-      <app-ui-alert-message [model]="data.messageError"></app-ui-alert-message>
+      <app-ui-alert-message [model]="data.loadingErrorMessage"></app-ui-alert-message>
     </div>
   </ng-container>
 </ng-template>
 
-<ng-template #emptyPublicationsListTemplate>
+<ng-template #publicationsListHeaderTemplate>
+  <div class="publications-list-header">
+    <div class="publications-list-search-bar" *ngIf="data.searchBar">
+      <app-ui-search-bar [model]="data.searchBar"></app-ui-search-bar>
+    </div>
 
+    <div class="publications-list-paginator" *ngIf="data.publicationsAreFiltered && data.paginator">
+      <app-ui-paginator [model]="data.paginator"></app-ui-paginator>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #publicationsListContentTemplate>
+  <ul>
+    <ng-container *ngFor="let publication of data.displayedPublications">
+      <app-publication [model]="publication"></app-publication>
+    </ng-container>
+  </ul>
+</ng-template>
+
+<ng-template #emptyPublicationsListTemplate>
+  <app-ui-alert-message [model]="data.emptyPublicationsMessage"></app-ui-alert-message>
 </ng-template>

@@ -1,5 +1,9 @@
 import { AlertMessageInterface } from '../../../shared/ui/alert-message/alert-message.manager';
 
+import { PublicationModel } from '../publication/publication.manger';
+import { SearchBarInterface, SearchBarManager } from '../../../shared/ui/search-bar/search-bar.manager';
+import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
+
 import { AuthorInterface } from '../../../shared/author/author.interface';
 import { PublicationInterface } from '../../../shared/publication/publication.interface';
 
@@ -9,22 +13,35 @@ export interface PublicationsListDataLabelsInterface {
   header: string;
   loadingPublications: string;
   loadingPublicationsFailed: string;
+  emptyPublications: string;
+  searchPublicationsPlaceholder: string;
+  emptySearchResult: string;
 }
 
 export interface PublicationsListDataInterface {
   labels: PublicationsListDataLabelsInterface;
   loadingPublications: boolean;
   loadingError: boolean;
-  messageError: AlertMessageInterface;
-  publications: PublicationInterface[];
+  loadingErrorMessage: AlertMessageInterface;
+  publications: PublicationModel[];
+  filteredPublications: PublicationModel[];
+  displayedPublications: PublicationModel[];
+  emptyPublicationsMessage: AlertMessageInterface;
+  searchBar: SearchBarInterface;
+  paginator: PaginatorModel;
+  publicationsAreFiltered: boolean;
+  emptySearchResultMessage: AlertMessageInterface;
 }
 
 export class PublicationsListManager {
 
   private static Labels: PublicationsListDataLabelsInterface = {
-    header: 'Author publications',
+    header: 'Publications',
     loadingPublications: 'Loading author publications, please wait ...',
-    loadingPublicationsFailed: 'Failed to retrieve publications 😣, please try again later.'
+    loadingPublicationsFailed: 'Failed to retrieve publications 😌, please try again later.',
+    emptyPublications: 'Usps! no publications were found 😌, dare to create the first one!',
+    searchPublicationsPlaceholder: 'Search publications by title.',
+    emptySearchResult: 'Usps! no results were found 😌.'
   };
 
   private static LoadingPublicationsError: AlertMessageInterface = {
@@ -33,12 +50,31 @@ export class PublicationsListManager {
     label: PublicationsListManager.Labels.loadingPublicationsFailed
   };
 
+  private static EmptyPublicationsMessage: AlertMessageInterface = {
+    type: 'info',
+    alignment: Alignment.Center,
+    label: PublicationsListManager.Labels.emptyPublications
+  };
+
+  private static EmptySearchResultMessage: AlertMessageInterface = {
+    type: 'info',
+    alignment: Alignment.Center,
+    label: PublicationsListManager.Labels.emptySearchResult
+  };
+
   static Data: PublicationsListDataInterface = {
     labels: PublicationsListManager.Labels,
     loadingPublications: false,
-    loadingError: true,
-    messageError: PublicationsListManager.LoadingPublicationsError,
-    publications: []
+    loadingError: false,
+    loadingErrorMessage: PublicationsListManager.LoadingPublicationsError,
+    publications: [],
+    filteredPublications: [],
+    displayedPublications: [],
+    emptyPublicationsMessage: PublicationsListManager.EmptyPublicationsMessage,
+    searchBar: null,
+    paginator: null,
+    publicationsAreFiltered: false,
+    emptySearchResultMessage: PublicationsListManager.EmptySearchResultMessage
   };
 
   private static FakePublication(title: string,
@@ -53,6 +89,11 @@ export class PublicationsListManager {
                             email: string,
                             dof: string): AuthorInterface {
     return { firstName, lastName, email, dof  };
+  }
+
+  private static FilterPublicationsByTitle(publications: PublicationModel[], filter: string): PublicationModel[] {
+    return publications
+      .filter(publication => publication.doesTitleContains(filter));
   }
 
   static FakeData(): PublicationInterface[] {
@@ -103,6 +144,37 @@ export class PublicationsListManager {
       PublicationsListManager.FakePublication(titles[3], bodies[3], dates[3], authors[3]),
       PublicationsListManager.FakePublication(titles[4], bodies[4], dates[4], authors[4])
     ];
+  }
+
+  static PublicationFromResponse(publications: PublicationInterface[]): PublicationModel[] {
+    return publications.map(publication => new PublicationModel(publication));
+  }
+
+  static SearchBar(searchText: (value: string) => void): SearchBarInterface {
+    return SearchBarManager.From(searchText, PublicationsListManager.Labels.searchPublicationsPlaceholder);
+  }
+
+  static Paginator(publications: PublicationModel[],
+                   previousPage: () => void, nextPage: () => void,
+                   navigateToPage: (pageNumber: number) => void): PaginatorModel | null {
+    if (publications.length === 0) { return null; }
+
+    const totalItems = publications.length;
+    return PaginatorModel.From(totalItems, previousPage, nextPage, navigateToPage);
+  }
+
+  static FilteredPublications(publications: PublicationModel[],
+                              filter: string): PublicationModel[] {
+    return filter !== ''
+      ? PublicationsListManager.FilterPublicationsByTitle(publications, filter)
+      : publications;
+  }
+
+  static DisplayedFilteredPublications(filteredPublications: PublicationModel[],
+                                       paginator: PaginatorModel): PublicationModel[] {
+    const start = paginator.offset;
+    const end = paginator.offset + paginator.itemsPerPage;
+    return filteredPublications.slice(start, end);
   }
 
 }

@@ -1,0 +1,10 @@
+<ng-container *ngIf="model && model.totalItems > 0">
+  <div class="pagination">
+    <button (click)="model.navigateToPageNumber(1)"><<</button>
+    <button (click)="model.previousPage()">Prev</button>
+    <button (click)="model.nextPage()">Next</button>
+    <button (click)="model.navigateToPageNumber(model.totalPages)">>></button>
+    <span>{{ model.itemsAndPagesInfo }}</span>
+  </div>
+</ng-container>
+

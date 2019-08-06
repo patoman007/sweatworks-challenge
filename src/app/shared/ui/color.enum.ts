@@ -3,7 +3,7 @@ enum Color {
   Info = '#5BC0DE',
   Warning = '#FFEEAD',
   Confirm = '#5CB85C',
-  Hover = 'rgba(249, 249, 249, 0.5)',
+  Hover = 'rgba(208, 208, 208, 0.25)',
   White = '#FFFFFF',
   Black = '#000000',
   Transparent = 'transparent',

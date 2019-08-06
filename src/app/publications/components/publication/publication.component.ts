@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PublicationInterface } from '../../../shared/publication/publication.interface';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PublicationModel } from './publication.manger';
 
 @Component({
   selector: 'app-publication',
@@ -9,11 +9,27 @@ import { PublicationInterface } from '../../../shared/publication/publication.in
 export class PublicationComponent implements OnInit {
 
   @Input()
-  model: PublicationInterface;
+  model: PublicationModel;
+
+  @Output()
+  edit = new EventEmitter<number>();
+
+  @Output()
+  delete = new EventEmitter<number>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onEdit() {
+    if (!this.model.id) { return; }
+    this.edit.emit(this.model.id);
+  }
+
+  onDelete() {
+    if (!this.model.id) { return; }
+    this.delete.emit(this.model.id);
   }
 
 }

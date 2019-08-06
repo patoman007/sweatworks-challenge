@@ -3,6 +3,8 @@ mat-toolbar {
 }
 
 mat-sidenav-container {
+  min-height: 85vh;
+
   mat-sidenav {
     max-width: 75vw;
   }
@@ -16,15 +18,9 @@ mat-drawer-content {
 }
 
 @media screen and (min-width: 768px) {
-  mat-toolbar {
-    height: 48px;
-  }
-
   mat-sidenav-container {
-    min-height: 95%;
-
     mat-sidenav {
-      max-width: 50vw;
+      max-width: 45vw;
     }
   }
 }

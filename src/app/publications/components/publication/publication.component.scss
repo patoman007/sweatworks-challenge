@@ -17,6 +17,7 @@ article {
     h4 {
       grid-column-start: 1;
       grid-column-end: 2;
+      margin: 8px 0;
       justify-self: left;
       align-self: center;
       font-size: 1.1em;
@@ -34,8 +35,37 @@ article {
     padding: 4px 0;
   }
 
-  .summary {
+  .foot {
+    display: grid;
     padding: 4px 0;
+    grid-template-columns: 1fr 1fr;
+
+    .author {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      justify-self: start;
+      align-self: center;
+    }
+
+    .actions {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      justify-self: end;
+      align-self: center;
+
+      button {
+        color: #777777;
+        font-size: 0.9em;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background-color: transparent;
+
+        &:hover {
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   .sub-title {
@@ -52,7 +82,6 @@ article {
     margin: 0 auto 16px;
 
     .title {
-
       h4 {
         margin: 16px 0;
       }
@@ -62,7 +91,7 @@ article {
       padding: 8px 0;
     }
 
-    .summary {
+    .foot {
       padding: 8px 0;
     }
   }

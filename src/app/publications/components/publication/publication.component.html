@@ -1,4 +1,4 @@
-<article>
+<article appUiHoverable>
   <div class="title">
     <h4>{{ model.title }}</h4>
     <p class="sub-title">{{ model.date | date }}</p>
@@ -8,7 +8,14 @@
     <p>{{ model.body }}</p>
   </div>
 
-  <div class="summary">
-    <p class="sub-title">{{ model.author.lastName }}, {{ model.author.firstName }}</p>
+  <div class="foot">
+    <div class="author">
+      <p class="sub-title">{{ model.author.fullName }}</p>
+    </div>
+
+    <div class="actions">
+      <button (click)="onEdit()">[Edit]</button>
+      <button (click)="onDelete()">[Delete]</button>
+    </div>
   </div>
 </article>

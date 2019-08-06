@@ -3,9 +3,33 @@
   padding: 0 8px;
   margin: 8px auto;
 
-  ul {
-    padding: 0;
-    margin: 0;
+  .publications-list {
+    padding: 0 4px;
+
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    .publications-list-header {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      margin: 4px 0;
+
+      .publications-list-search-bar {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        justify-self: start;
+        align-self: center;
+      }
+
+      .publications-list-paginator {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        justify-self: start;
+        align-self: center;
+      }
+    }
   }
 
   .error-message {
@@ -18,6 +42,31 @@
     max-width: 70%;
     padding: 0 16px;
     margin: 16px auto;
+
+    .publications-list {
+      padding: 0 8px;
+
+      .publications-list-header {
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr 1fr;
+        margin: 8px 0;
+
+        .publications-list-search-bar {
+          grid-row-start: 1;
+          grid-row-end: 1;
+          grid-column-start: 1;
+          grid-column-end: 2;
+        }
+
+        .publications-list-paginator {
+          grid-row-start: 1;
+          grid-row-end: 1;
+          grid-column-start: 2;
+          grid-column-end: 3;
+          justify-self: end;
+        }
+      }
+    }
 
     .error-message {
       width: 50%;
