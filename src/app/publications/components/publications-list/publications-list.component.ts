@@ -13,6 +13,15 @@ export class PublicationsListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.initPublications();
+  }
+
+  private initPublications() {
+    this.data.loadingPublications = true;
+    window.setTimeout(() => {
+      this.data.publications = PublicationsListManager.FakeData(),
+      this.data.loadingPublications = false;
+    }, 1200);
   }
 
 }

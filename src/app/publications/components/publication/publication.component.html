@@ -1,1 +1,14 @@
-<p>publication works!</p>
+<article>
+  <div class="title">
+    <h4>{{ model.title }}</h4>
+    <p class="sub-title">{{ model.date | date }}</p>
+  </div>
+
+  <div class="content">
+    <p>{{ model.body }}</p>
+  </div>
+
+  <div class="summary">
+    <p class="sub-title">{{ model.author.lastName }}, {{ model.author.firstName }}</p>
+  </div>
+</article>

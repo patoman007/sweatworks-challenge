@@ -1,11 +1,26 @@
 .container {
   padding: 0 4px 4px;
-  margin: 8px auto;
+  margin: 6px auto;
+
+  header {
+    border-bottom: 1px solid #CCCCCC;
+
+    h4 {
+      margin: 6px 0;
+      font-size: 1.2em;
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {
   .container {
     padding: 0 8px 8px;
-    margin: 16px auto;
+    margin: 12px auto;
+
+    header {
+      h4 {
+        margin: 12px 0;
+      }
+    }
   }
 }

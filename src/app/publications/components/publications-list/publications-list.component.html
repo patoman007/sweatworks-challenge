@@ -1,9 +1,27 @@
 <div class="container">
-  <app-section-header [title]="data.labels.header"></app-section-header>
+  <app-ui-section-header [title]="data.labels.header"></app-ui-section-header>
 
-  <ul>
-    <ng-container>
-
-    </ng-container>
-  </ul>
+  <ng-container *ngIf="data.loadingPublications; else publicationsListTemplate">
+    <app-ui-progress-bar [label]="data.labels.loadingPublications"></app-ui-progress-bar>
+  </ng-container>
 </div>
+
+<ng-template #publicationsListTemplate>
+  <ng-container *ngIf="data.publications && data.publications.length > 0; else emptyPublicationsListTemplate">
+    <ul>
+      <ng-container *ngFor="let publication of data.publications">
+        <app-publication [model]="publication"></app-publication>
+      </ng-container>
+    </ul>
+  </ng-container>
+
+  <ng-container *ngIf="data.loadingError">
+    <div class="error-message">
+      <app-ui-alert-message [model]="data.messageError"></app-ui-alert-message>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyPublicationsListTemplate>
+
+</ng-template>

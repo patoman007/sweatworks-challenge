@@ -4,6 +4,7 @@ import {
   MatButtonModule,
   MatIconModule,
   MatListModule,
+  MatProgressBarModule,
   MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
@@ -12,6 +13,7 @@ const MATERIAL_MODULES = [
   MatButtonModule,
   MatIconModule,
   MatListModule,
+  MatProgressBarModule,
   MatSidenavModule,
   MatToolbarModule
 ];

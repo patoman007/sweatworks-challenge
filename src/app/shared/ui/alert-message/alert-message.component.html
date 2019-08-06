@@ -1,0 +1,12 @@
+<div class="container"
+     [ngClass]="{
+     'info-container': model.type === 'info',
+     'success-container': model.type === 'success',
+     'warn-container': model.type === 'warn',
+     'error-container': model.type === 'error',
+     'la-container': model.alignment === 1,
+     'ca-container': model.alignment === 2,
+     'ra-container': model.alignment === 3
+     }" *ngIf="model">
+  <p>{{ model.label }}</p>
+</div>
