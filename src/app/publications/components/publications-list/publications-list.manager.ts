@@ -1,50 +1,128 @@
 import { AlertMessageInterface } from '../../../shared/ui/alert-message/alert-message.manager';
 
-import { PublicationModel } from '../publication/publication.manger';
+import { SectionHeaderInterface } from '../../../shared/ui/section-header/section-header.manager';
+import { ButtonInterface } from '../../../shared/ui/button/button.manager';
+import { AuthorModel, PublicationModel } from '../publication/publication.manger';
 import { SearchBarInterface, SearchBarManager } from '../../../shared/ui/search-bar/search-bar.manager';
 import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
 
-import { AuthorInterface } from '../../../shared/author/author.interface';
-import { PublicationInterface } from '../../../shared/publication/publication.interface';
-
 import { Alignment } from '../../../shared/alignment/alignment.enum';
+import Color from '../../../shared/ui/color.enum';
+import { PublicationsResponseInterface } from '../../../shared/publication/publications-response.manager';
+import {
+  PublicationsSortDataInterface,
+  PublicationsSortManager
+} from '../publications-sort/publications-sort.manager';
+
+export enum SortPublicationsBy {
+  TitleAsc = 'titleAsc',
+  TitleDesc = 'titleDesc',
+  DateAsc = 'dateAsc',
+  DateDesc = 'dateDesc'
+}
 
 export interface PublicationsListDataLabelsInterface {
-  header: string;
+  sectionHeader: string;
+  newPublication: string;
   loadingPublications: string;
   loadingPublicationsFailed: string;
   emptyPublications: string;
   searchPublicationsPlaceholder: string;
   emptySearchResult: string;
+  sortByTitleAsc: string;
+  sortByTitleDesc: string;
+  sortByDateAsc: string;
+  sortByDateDesc: string;
+}
+
+export interface PublicationsListDataAlertMessagesInterface {
+  loadingPublicationsErrorMessage: AlertMessageInterface;
+  emptyPublicationsMessage: AlertMessageInterface;
+  emptySearchResultMessage: AlertMessageInterface;
+}
+
+export interface PublicationsListDataPublicationsInterface {
+  publications: PublicationModel[];
+  filtered: PublicationModel[];
+  displayed: PublicationModel[];
+  loading: boolean;
+  loadingError: boolean;
+  areFiltered: boolean;
 }
 
 export interface PublicationsListDataInterface {
   labels: PublicationsListDataLabelsInterface;
-  loadingPublications: boolean;
-  loadingError: boolean;
-  loadingErrorMessage: AlertMessageInterface;
-  publications: PublicationModel[];
-  filteredPublications: PublicationModel[];
-  displayedPublications: PublicationModel[];
-  emptyPublicationsMessage: AlertMessageInterface;
+  sectionHeader: SectionHeaderInterface;
   searchBar: SearchBarInterface;
   paginator: PaginatorModel;
-  publicationsAreFiltered: boolean;
-  emptySearchResultMessage: AlertMessageInterface;
+  sorter: PublicationsSortDataInterface;
+  publications: PublicationsListDataPublicationsInterface;
+  alertMessages: PublicationsListDataAlertMessagesInterface;
 }
 
 export class PublicationsListManager {
 
   private static Labels: PublicationsListDataLabelsInterface = {
-    header: 'Publications',
+    sectionHeader: 'Publications',
+    newPublication: 'New Publication',
     loadingPublications: 'Loading author publications, please wait ...',
-    loadingPublicationsFailed: 'Failed to retrieve publications 😌, please try again later.',
+    loadingPublicationsFailed: 'Failed to retrieve publications 😌.',
     emptyPublications: 'Usps! no publications were found 😌, dare to create the first one!',
-    searchPublicationsPlaceholder: 'Search publications by title.',
-    emptySearchResult: 'Usps! no results were found 😌.'
+    searchPublicationsPlaceholder: 'Search by title.',
+    emptySearchResult: 'Usps! no results were found 😌.',
+    sortByTitleAsc: 'Title asc',
+    sortByTitleDesc: 'Title desc',
+    sortByDateAsc: 'Date asc',
+    sortByDateDesc: 'Date desc'
   };
 
-  private static LoadingPublicationsError: AlertMessageInterface = {
+  private static NewPublicationHeaderButton: ButtonInterface = {
+    label: PublicationsListManager.Labels.newPublication,
+    type: 'raised',
+    bgColor: Color.Confirm,
+    fontColor: Color.White,
+    onClick: () => {}
+  };
+
+  private static SectionHeader: SectionHeaderInterface = {
+    title: PublicationsListManager.Labels.sectionHeader,
+    actionButtons: [PublicationsListManager.NewPublicationHeaderButton]
+  };
+
+  private static SearchBar: SearchBarInterface = SearchBarManager
+    .From(() => {}, PublicationsListManager.Labels.searchPublicationsPlaceholder);
+
+  private static SortPublicationsByTitleAsc = PublicationsSortManager
+    .PublicationSort(SortPublicationsBy.TitleAsc, PublicationsListManager.Labels.sortByTitleAsc);
+
+  private static SortPublicationsByTitleDesc = PublicationsSortManager
+    .PublicationSort(SortPublicationsBy.TitleDesc, PublicationsListManager.Labels.sortByTitleDesc);
+
+  private static SortPublicationsByDateAsc = PublicationsSortManager
+    .PublicationSort(SortPublicationsBy.DateAsc, PublicationsListManager.Labels.sortByDateAsc);
+
+  private static SortPublicationsByDateDesc = PublicationsSortManager
+    .PublicationSort(SortPublicationsBy.DateDesc, PublicationsListManager.Labels.sortByDateDesc);
+
+  private static Sorter: PublicationsSortDataInterface = {
+    sorts: [
+      PublicationsListManager.SortPublicationsByTitleAsc,
+      PublicationsListManager.SortPublicationsByTitleDesc,
+      PublicationsListManager.SortPublicationsByDateAsc,
+      PublicationsListManager.SortPublicationsByDateDesc,
+    ]
+  };
+
+  private static PublicationsData: PublicationsListDataPublicationsInterface = {
+    publications: [],
+    filtered: [],
+    displayed: [],
+    loading: false,
+    loadingError: false,
+    areFiltered: false
+  };
+
+  private static LoadingPublicationsErrorMessage: AlertMessageInterface = {
     type: 'error',
     alignment: Alignment.Center,
     label: PublicationsListManager.Labels.loadingPublicationsFailed
@@ -62,96 +140,75 @@ export class PublicationsListManager {
     label: PublicationsListManager.Labels.emptySearchResult
   };
 
-  static Data: PublicationsListDataInterface = {
-    labels: PublicationsListManager.Labels,
-    loadingPublications: false,
-    loadingError: false,
-    loadingErrorMessage: PublicationsListManager.LoadingPublicationsError,
-    publications: [],
-    filteredPublications: [],
-    displayedPublications: [],
+  private static AlertMessages: PublicationsListDataAlertMessagesInterface = {
+    loadingPublicationsErrorMessage: PublicationsListManager.LoadingPublicationsErrorMessage,
     emptyPublicationsMessage: PublicationsListManager.EmptyPublicationsMessage,
-    searchBar: null,
-    paginator: null,
-    publicationsAreFiltered: false,
     emptySearchResultMessage: PublicationsListManager.EmptySearchResultMessage
   };
 
-  private static FakePublication(title: string,
-                                 body: string,
-                                 date: string,
-                                 author: AuthorInterface): PublicationInterface {
-    return { title, body, date, author };
-  }
-
-  private static FakeAuthor(firstName: string,
-                            lastName: string,
-                            email: string,
-                            dof: string): AuthorInterface {
-    return { firstName, lastName, email, dof  };
-  }
+  static Data: PublicationsListDataInterface = {
+    labels: PublicationsListManager.Labels,
+    sectionHeader: PublicationsListManager.SectionHeader,
+    searchBar: PublicationsListManager.SearchBar,
+    paginator: null,
+    sorter: PublicationsListManager.Sorter,
+    publications: PublicationsListManager.PublicationsData,
+    alertMessages: PublicationsListManager.AlertMessages
+  };
 
   private static FilterPublicationsByTitle(publications: PublicationModel[], filter: string): PublicationModel[] {
     return publications
       .filter(publication => publication.doesTitleContains(filter));
   }
 
-  static FakeData(): PublicationInterface[] {
-    const authors: AuthorInterface[] = [
-      PublicationsListManager
-        .FakeAuthor('Dr.', 'Seuss', 'seuss@gmail.com', '05/04/1965'),
-      PublicationsListManager
-        .FakeAuthor('Marilyn', 'Monroe', 'mmonroe@yahoo.com', '12/08/1945'),
-      PublicationsListManager
-        .FakeAuthor('Oscar', 'Wilde', 'owilde@hotmail.com', '11/01/1937'),
-      PublicationsListManager
-        .FakeAuthor('Albert', 'Einstein', 'aeinstein@gmail.com', '02/03/1929'),
-      PublicationsListManager
-        .FakeAuthor('Frank', 'Zappa', 'fzappa@outlook.com', '05/04/1965'),
-    ];
-
-    const titles: string[] = [
-      'Don\'t cry',
-      'I\'m selfish',
-      'Be yourself',
-      'Two things',
-      'So many books'
-    ];
-
-    const bodies: string[] = [
-      'Don\'t cry because it\'s over, smile because it happened.',
-      'I\'m selfish, impatient and a little insecure. I make mistakes, I am out of control and ' +
-      'at times hard to handle. But if you can\'t handle me at my worst, then you sure as hell ' +
-      'don\'t deserve me at my best.',
-      'Be yourself; everyone else is already taken.',
-      'Two things are infinite: the universe and human stupidity; and I\'m not sure about ' +
-      'the universe.',
-      'So many books, so little time.'
-    ];
-
-    const dates: string[] = [
-      '02/04/2019',
-      '10/03/2019',
-      '05/08/2018',
-      '11/11/2018',
-      '08/05/2019'
-    ];
-
-    return [
-      PublicationsListManager.FakePublication(titles[0], bodies[0], dates[0], authors[0]),
-      PublicationsListManager.FakePublication(titles[1], bodies[1], dates[1], authors[1]),
-      PublicationsListManager.FakePublication(titles[2], bodies[2], dates[2], authors[2]),
-      PublicationsListManager.FakePublication(titles[3], bodies[3], dates[3], authors[3]),
-      PublicationsListManager.FakePublication(titles[4], bodies[4], dates[4], authors[4])
-    ];
+  private static PublicationsByTitleAsc(a: PublicationModel, b: PublicationModel): number {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
   }
 
-  static PublicationFromResponse(publications: PublicationInterface[]): PublicationModel[] {
-    return publications.map(publication => new PublicationModel(publication));
+  private static PublicationsByTitleDesc(a: PublicationModel, b: PublicationModel): number {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    return titleA < titleB ? 1 : titleA > titleB ? -1 : 0;
   }
 
-  static SearchBar(searchText: (value: string) => void): SearchBarInterface {
-    return SearchBarManager.From(searchText, PublicationsListManager.Labels.searchPublicationsPlaceholder);
+  private static PublicationsByDateAsc(a: PublicationModel, b: PublicationModel): number {
+    const dateA = new Date(a.datetime);
+    const dateB = new Date(b.datetime);
+    return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
+  }
+
+  private static PublicationsByDateDesc(a: PublicationModel, b: PublicationModel): number {
+    const dateA = new Date(a.datetime);
+    const dateB = new Date(b.datetime);
+    return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
+  }
+
+  static UpdateSectionHeader(newPublication: () => void) {
+    PublicationsListManager.Data.sectionHeader.actionButtons[0].onClick = newPublication;
+  }
+
+  static UpdateSearchBar(searchText: (value: string) => void) {
+    PublicationsListManager.Data.searchBar.searchTerm = searchText;
+  }
+
+  static UpdateLoadingPublicationsError(errorMessages: string[]) {
+    const errorLabel = PublicationsListManager.Labels.loadingPublicationsFailed
+      + '\n\nError: ' + errorMessages.join(' - ');
+    PublicationsListManager.Data.alertMessages.loadingPublicationsErrorMessage.label = errorLabel;
+    PublicationsListManager.Data.publications.loadingError = true;
+  }
+
+  static PublicationFromResponse(response: PublicationsResponseInterface): PublicationModel[] {
+    if (!response.succeed) { return []; }
+    return response.data.map(publication => new PublicationModel(publication));
+  }
+
+  static AuthorsFromResponse(response: PublicationsResponseInterface): AuthorModel[] {
+    if (!response.succeed) { return []; }
+    return response.data
+      .map(publication => new AuthorModel(publication.author));
   }
 
   static Paginator(publications: PublicationModel[],
@@ -163,8 +220,18 @@ export class PublicationsListManager {
     return PaginatorModel.From(totalItems, previousPage, nextPage, navigateToPage);
   }
 
-  static FilteredPublications(publications: PublicationModel[],
-                              filter: string): PublicationModel[] {
+  static UpdatedAuthorHeader(author: AuthorModel): string {
+    return `${author.lastName}'s ${ PublicationsListManager.Labels.sectionHeader }`;
+  }
+
+  static PublicationsFilteredByAuthor(publications: PublicationModel[],
+                                      author: AuthorModel): PublicationModel[] {
+    return publications
+      .filter(publication => publication.belongsToAuthor(author));
+  }
+
+  static PublicationsFilteredByTitle(publications: PublicationModel[],
+                                     filter: string): PublicationModel[] {
     return filter !== ''
       ? PublicationsListManager.FilterPublicationsByTitle(publications, filter)
       : publications;
@@ -175,6 +242,19 @@ export class PublicationsListManager {
     const start = paginator.offset;
     const end = paginator.offset + paginator.itemsPerPage;
     return filteredPublications.slice(start, end);
+  }
+
+  static SortPublications(publications: PublicationModel[], by: SortPublicationsBy): PublicationModel[] {
+    switch (by) {
+      case SortPublicationsBy.TitleAsc:
+        return publications.sort(PublicationsListManager.PublicationsByTitleAsc);
+      case SortPublicationsBy.TitleDesc:
+        return publications.sort(PublicationsListManager.PublicationsByTitleDesc);
+      case SortPublicationsBy.DateAsc:
+        return publications.sort(PublicationsListManager.PublicationsByDateAsc);
+      case SortPublicationsBy.DateDesc:
+        return publications.sort(PublicationsListManager.PublicationsByDateDesc);
+    }
   }
 
 }

@@ -1,48 +1,56 @@
 <div class="container">
-  <app-ui-section-header [title]="data.labels.header"></app-ui-section-header>
-  <ng-container *ngIf="data.loadingPublications; else publicationsListTemplate">
-    <app-ui-progress-bar [label]="data.labels.loadingPublications"></app-ui-progress-bar>
+  <app-ui-section-header [model]="model.sectionHeader"></app-ui-section-header>
+  <ng-container *ngIf="shouldShowLoadingBar; else loadedPublicationsListTemplate">
+    <app-ui-progress-bar [label]="model.labels.loadingPublications"></app-ui-progress-bar>
   </ng-container>
 </div>
 
-<ng-template #publicationsListTemplate>
-  <ng-container *ngIf="data.publications && data.publications.length > 0; else emptyPublicationsListTemplate">
-    <div class="publications-list">
-      <ng-container *ngTemplateOutlet="publicationsListHeaderTemplate"></ng-container>
-
-      <ng-container *ngIf="emptySearchResult; else publicationsListContentTemplate">
-        <app-ui-alert-message [model]="data.emptySearchResultMessage"></app-ui-alert-message>
-      </ng-container>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="data.loadingError">
+<ng-template #loadedPublicationsListTemplate>
+  <ng-container *ngIf="shouldShowLoadingErrorMessage; else publicationsListTemplate">
     <div class="error-message">
-      <app-ui-alert-message [model]="data.loadingErrorMessage"></app-ui-alert-message>
+      <app-ui-alert-message [model]="model.alertMessages.loadingPublicationsErrorMessage"></app-ui-alert-message>
     </div>
   </ng-container>
 </ng-template>
 
-<ng-template #publicationsListHeaderTemplate>
+<ng-template #publicationsListTemplate>
+  <ng-container *ngIf="shouldShowPublicationsList; else emptyPublicationsListTemplate">
+    <div class="publications-list">
+      <ng-container *ngTemplateOutlet="publicationsListSearchTemplate"></ng-container>
+
+      <ng-container *ngIf="shouldShowEmptyResultMessage; else publicationsListContentTemplate">
+        <app-ui-alert-message [model]="model.alertMessages.emptySearchResultMessage"></app-ui-alert-message>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyPublicationsListTemplate>
+  <app-ui-alert-message [model]="model.alertMessages.emptyPublicationsMessage"></app-ui-alert-message>
+</ng-template>
+
+<ng-template #publicationsListSearchTemplate>
   <div class="publications-list-header">
-    <div class="publications-list-search-bar" *ngIf="data.searchBar">
-      <app-ui-search-bar [model]="data.searchBar"></app-ui-search-bar>
+    <div class="publications-list-search-bar" *ngIf="model.searchBar">
+      <app-ui-search-bar [model]="model.searchBar"></app-ui-search-bar>
     </div>
 
-    <div class="publications-list-paginator" *ngIf="data.publicationsAreFiltered && data.paginator">
-      <app-ui-paginator [model]="data.paginator"></app-ui-paginator>
+    <div class="publications-list-paginator" *ngIf="shouldShowPaginator">
+      <app-ui-paginator [model]="model.paginator"></app-ui-paginator>
     </div>
+  </div>
+
+  <div class="publications-list-sort">
+    <app-publications-sort [model]="model.sorter" (changed)="handleSort($event)">
+    </app-publications-sort>
   </div>
 </ng-template>
 
 <ng-template #publicationsListContentTemplate>
   <ul>
-    <ng-container *ngFor="let publication of data.displayedPublications">
+    <ng-container *ngFor="let publication of model.publications.displayed">
       <app-publication [model]="publication"></app-publication>
     </ng-container>
   </ul>
 </ng-template>
 
-<ng-template #emptyPublicationsListTemplate>
-  <app-ui-alert-message [model]="data.emptyPublicationsMessage"></app-ui-alert-message>
-</ng-template>

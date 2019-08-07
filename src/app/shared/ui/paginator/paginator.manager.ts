@@ -20,7 +20,7 @@ export class PaginatorModel implements PaginatorInterface {
 
   static From(totalItems: number, previousPage: () => void, nextPage: () => void,
               navigateToPageNumber: (pageNumber: number) => void,
-              itemsPerPage: number = 1, currentPage: number = 1,
+              itemsPerPage: number = 5, currentPage: number = 1,
               navPages: number = 3, disable: boolean = false): PaginatorModel {
     const paginator: PaginatorInterface = {
       totalItems, itemsPerPage, currentPage, disable,

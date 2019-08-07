@@ -1,0 +1,7 @@
+<div class="container" *ngIf="model">
+  <mat-button-toggle-group name="sort" aria-label="Sort By" (change)="changed.emit($event.value)">
+    <ng-container *ngFor="let sort of model.sorts">
+      <mat-button-toggle [value]="sort.value">{{ sort.label }}</mat-button-toggle>
+    </ng-container>
+  </mat-button-toggle-group>
+</div>

@@ -33,7 +33,6 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
 
     this.inputSubscription = search$
       .subscribe(value => {
-        this.model.shouldShowClearButton = value !== '';
         this.model.searchTerm(value);
       });
   }
@@ -41,11 +40,6 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (!this.inputSubscription) { return; }
     this.inputSubscription.unsubscribe();
-  }
-
-  clear() {
-    const input = this.searchInput.nativeElement as HTMLInputElement;
-    input.value = '';
   }
 
 }

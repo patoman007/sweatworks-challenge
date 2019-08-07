@@ -28,16 +28,20 @@ export class PublicationModel implements PublicationInterface {
   id: number;
   title: string;
   body: string;
-  date: string;
+  datetime: string;
   author: AuthorModel;
 
   constructor(publication: PublicationInterface) {
     this.id = publication.id || null;
     this.title = publication.title;
     this.body = publication.body;
-    this.date = publication.date;
+    this.datetime = publication.datetime;
 
     this.author = new AuthorModel(publication.author);
+  }
+
+  belongsToAuthor(author: AuthorModel): boolean {
+    return this.author.id === author.id;
   }
 
   doesTitleContains(str: string): boolean {

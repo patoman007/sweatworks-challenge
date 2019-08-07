@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  webServices: {
+    base: 'http://web/api/v1/'
+  }
 };

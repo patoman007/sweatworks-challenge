@@ -4,7 +4,7 @@ export interface PublicationInterface {
   id?: number;
   title: string;
   body: string;
-  date: string;
+  datetime: string;
   author: AuthorInterface;
 }
 

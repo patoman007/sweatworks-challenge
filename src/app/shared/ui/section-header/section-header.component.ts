@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { SectionHeaderInterface } from './section-header.manager';
 
 @Component({
   selector: 'app-ui-section-header',
@@ -8,7 +9,7 @@ import { Component, Input } from '@angular/core';
 export class SectionHeaderComponent {
 
   @Input()
-  title = '';
+  model: SectionHeaderInterface;
 
   constructor() { }
 

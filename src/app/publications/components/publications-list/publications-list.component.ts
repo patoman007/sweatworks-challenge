@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { PublicationsListManager } from './publications-list.manager';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { PublicationsListManager, SortPublicationsBy } from './publications-list.manager';
 
-import { PublicationModel } from '../publication/publication.manger';
+import { AuthorModel, PublicationModel } from '../publication/publication.manger';
 import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
+import { PublicationsService } from '../../services/publications.service';
+import { PublicationsResponseInterface } from '../../../shared/publication/publications-response.manager';
+import { AppService } from '../../../app.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -10,72 +14,122 @@ import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
   templateUrl: './publications-list.component.html',
   styleUrls: ['./publications-list.component.scss']
 })
-export class PublicationsListComponent implements OnInit {
+export class PublicationsListComponent implements OnInit, OnDestroy {
 
-  data = PublicationsListManager.Data;
+  private authorSelectionSubscription: Subscription;
 
-  get emptySearchResult(): boolean {
-    return this.data.publicationsAreFiltered && this.data.filteredPublications.length === 0;
+  model = PublicationsListManager.Data;
+
+  get shouldShowLoadingBar(): boolean {
+    return this.model.publications.loading;
   }
 
-  constructor() { }
+  get shouldShowLoadingErrorMessage(): boolean {
+    return this.model.publications.loadingError;
+  }
+
+  get shouldShowPublicationsList(): boolean {
+    return this.model.publications.publications !== null
+      && this.model.publications.publications.length > 0;
+  }
+
+  get shouldShowEmptyResultMessage(): boolean {
+    return this.model.publications.areFiltered
+      && this.model.publications.filtered.length === 0;
+  }
+
+  get shouldShowPaginator(): boolean {
+    return this.model.publications.areFiltered && this.model.paginator !== null;
+  }
+
+  constructor(private appService: AppService, private publicationsService: PublicationsService) { }
 
   ngOnInit() {
-    this.initSearch();
+    this.listenToAuthorSelection();
+    this.bindSectionHeader();
+    this.bindSearchBar();
     this.initPublications();
   }
 
-  private initSearch() {
-    const searchText = this.handleSearchChange.bind(this);
-    this.data.searchBar = PublicationsListManager.SearchBar(searchText);
+  ngOnDestroy() {
+    if (!this.authorSelectionSubscription) { return; }
+    this.authorSelectionSubscription.unsubscribe();
+  }
+
+  private listenToAuthorSelection() {
+    this.authorSelectionSubscription = this.appService.selectedAuthor$
+      .subscribe(author => this.handleAuthorSelection(author));
+  }
+
+  private bindSectionHeader() {
+    PublicationsListManager.UpdateSectionHeader(this.newPublication.bind(this));
+  }
+
+  private bindSearchBar() {
+    PublicationsListManager.UpdateSearchBar(this.handleSearchChange.bind(this));
   }
 
   private initPublications() {
-    this.data.loadingPublications = true;
-    window.setTimeout(() => {
-      this.handlePublicationsResponse();
-    }, 1200);
+    this.model.publications.loading = true;
+    this.publicationsService.getPublications()
+      .subscribe(res => this.handlePublicationsResponse(res));
+  }
+
+  private handleAuthorSelection(author: AuthorModel) {
+    const publications = this.model.publications.publications;
+    this.model.sectionHeader.title = PublicationsListManager.UpdatedAuthorHeader(author);
+    this.model.publications.displayed = PublicationsListManager
+      .PublicationsFilteredByAuthor(publications, author);
   }
 
   private handleSearchChange(value: string) {
-    this.data.publicationsAreFiltered = value !== '';
-    this.updateFilteredPublications(this.data.publications, value);
+    this.model.publications.areFiltered = value !== '';
+    this.updateFilteredPublications(this.model.publications.publications, value);
   }
 
-  private handlePublicationsResponse() {
-    const publicationsResponse = PublicationsListManager.FakeData();
-    const publications = PublicationsListManager.PublicationFromResponse(publicationsResponse);
+  private handlePublicationsResponse(response: PublicationsResponseInterface) {
+    if (!response.succeed) {
+      PublicationsListManager.UpdateLoadingPublicationsError(response.errorMessages);
+      this.model.publications.loading = false;
+      return;
+    }
 
-    this.data.publications = publications;
-    this.data.displayedPublications = publications;
-    this.data.loadingPublications = false;
+    const publications = PublicationsListManager.PublicationFromResponse(response);
+    const authors = PublicationsListManager.AuthorsFromResponse(response);
+    this.model.publications.publications = publications;
+    this.model.publications.displayed = publications;
+    this.appService.updateAuthors(authors);
+    this.model.publications.loading = false;
   }
 
   private updateFilteredPublications(publications: PublicationModel[], filter: string) {
-    if (!this.data.publicationsAreFiltered) {
-      this.data.displayedPublications = publications;
-      this.data.filteredPublications = [];
+    if (!this.model.publications.areFiltered) {
+      this.model.publications.filtered = [];
+      this.model.publications.displayed = publications;
       return;
     }
 
-    const filteredPublications = PublicationsListManager.FilteredPublications(publications, filter);
+    const filteredPublications = PublicationsListManager.PublicationsFilteredByTitle(publications, filter);
     if (filteredPublications.length === 0) {
-      this.data.displayedPublications = [];
+      this.model.publications.filtered = [];
+      this.model.publications.displayed = [];
       return;
     }
 
-    this.data.filteredPublications = filteredPublications;
-    this.data.paginator = this.getPaginator(filteredPublications);
+    this.model.publications.filtered = filteredPublications;
+    this.model.paginator = this.getPaginator(filteredPublications);
     this.updatePaginatedPublications();
   }
 
   private canUpdatePaginatedPublications() {
-    return this.data.paginator && this.data.filteredPublications && this.data.filteredPublications.length > 0;
+    return this.model.paginator
+      && this.model.publications.filtered
+      && this.model.publications.filtered.length > 0;
   }
 
   private updatePaginatedPublications() {
-    this.data.displayedPublications = PublicationsListManager
-      .DisplayedFilteredPublications(this.data.filteredPublications, this.data.paginator);
+    this.model.publications.displayed = PublicationsListManager
+      .DisplayedFilteredPublications(this.model.publications.filtered, this.model.paginator);
   }
 
   private getPaginator(filteredPublications: PublicationModel[]): PaginatorModel {
@@ -86,22 +140,32 @@ export class PublicationsListComponent implements OnInit {
       .Paginator(filteredPublications, previousPage, nextPage, navigateToPage);
   }
 
+  private newPublication() {
+
+  }
+
   private previousPage() {
     if (!this.canUpdatePaginatedPublications()) { return; }
-    this.data.paginator.decrementCurrentPage();
+    this.model.paginator.decrementCurrentPage();
     this.updatePaginatedPublications();
   }
 
   private nextPage() {
     if (!this.canUpdatePaginatedPublications()) { return; }
-    this.data.paginator.incrementCurrentPage();
+    this.model.paginator.incrementCurrentPage();
     this.updatePaginatedPublications();
   }
 
   private navigateToPage(pageNumber: number) {
     if (!this.canUpdatePaginatedPublications()) { return; }
-    this.data.paginator.setCurrentPage(pageNumber);
+    this.model.paginator.setCurrentPage(pageNumber);
     this.updatePaginatedPublications();
+  }
+
+  private handleSort(sortBy: string) {
+    const publications = this.model.publications.displayed;
+    this.model.publications.displayed = PublicationsListManager
+      .SortPublications(publications, sortBy as SortPublicationsBy);
   }
 
 }

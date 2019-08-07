@@ -1,5 +1,5 @@
 .container {
-  max-width: 90%;
+  max-width: 95%;
   padding: 0 8px;
   margin: 8px auto;
 
@@ -8,7 +8,7 @@
 
     ul {
       padding: 0;
-      margin: 0;
+      margin: 8px 0;
     }
 
     .publications-list-header {
@@ -45,6 +45,10 @@
 
     .publications-list {
       padding: 0 8px;
+
+      ul {
+        margin: 16px 0;
+      }
 
       .publications-list-header {
         grid-template-rows: 1fr;
