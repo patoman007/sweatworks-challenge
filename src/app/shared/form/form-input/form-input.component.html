@@ -1,0 +1,22 @@
+<ng-container *ngIf="model && model.type === 'input'">
+  <app-text-input [type]="model.type"
+                  [name]="model.name"
+                  [placeholder]="model.placeholder"
+                  [control]="model.control"
+                  [hintMessage]="model.hintMessage"
+                  [errorMessage]="model.errorMessage">
+  </app-text-input>
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'select'">
+
+</ng-container>
+
+<ng-container *ngIf="model && model.type === 'date'">
+  <app-date-input [name]="model.name"
+                  [placeholder]="model.placeholder"
+                  [control]="model.control"
+                  [hintMessage]="model.hintMessage"
+                  [errorMessage]="model.errorMessage">
+  </app-date-input>
+</ng-container>

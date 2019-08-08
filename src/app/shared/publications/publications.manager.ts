@@ -1,26 +1,12 @@
-import { PublicationInterface } from '../../../shared/publication/publication.interface';
-import { AuthorInterface } from '../../../shared/author/author.interface';
+import { AuthorInterface, AuthorModel } from '../authors/authors.manager';
+import { PublicationsResponseInterface } from './publications-response.manager';
 
-export class AuthorModel implements AuthorInterface {
-
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  dof: string;
-
-  constructor(author: AuthorInterface) {
-    this.id = author.id || null;
-    this.firstName = author.firstName;
-    this.lastName = author.lastName;
-    this.email = author.lastName;
-    this.dof = author.dof;
-  }
-
-  get fullName(): string {
-    return `${ this.lastName || '' }, ${ this.firstName || '' }`;
-  }
-
+export interface PublicationInterface {
+  id?: number;
+  title: string;
+  body: string;
+  datetime: string;
+  author: AuthorInterface;
 }
 
 export class PublicationModel implements PublicationInterface {
@@ -54,4 +40,11 @@ export class PublicationModel implements PublicationInterface {
 
 }
 
+export class PublicationsManager {
 
+  static PublicationsFromResponse(response: PublicationsResponseInterface): PublicationModel[] {
+    if (!response.succeed) { return []; }
+    return response.data.map(publication => new PublicationModel(publication));
+  }
+
+}

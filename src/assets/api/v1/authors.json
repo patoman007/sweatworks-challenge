@@ -1,0 +1,41 @@
+{
+  "succeed": true,
+  "errorMessages": [],
+  "data": [{
+    "id": 1,
+    "firstName": "Dr",
+    "lastName": "Seuss",
+    "email": "seuss@gmail.com",
+    "dof": "05/04/1965"
+  }, {
+    "id": 2,
+    "firstName": "Marilyn",
+    "lastName": "Monroe",
+    "email": "mmonroe@yahoo.com",
+    "dof": "12/08/1945"
+  }, {
+    "id": 3,
+    "firstName": "Oscar",
+    "lastName": "Wilde",
+    "email": "owilde@hotmail.com",
+    "dof": "11/01/1937"
+  }, {
+    "id": 4,
+    "firstName": "Albert",
+    "lastName": "Einstein",
+    "email": "aeinstein@gmail.com",
+    "dof": "02/03/1929"
+  }, {
+    "id": 5,
+    "firstName": "Frank",
+    "lastName": "Zappa",
+    "email": "fzappa@outlook.com",
+    "dof": "05/04/1965"
+  }, {
+    "id": 6,
+    "firstName": "Patricio",
+    "lastName": "Aguirre",
+    "email": "aguirre_patricio@outlook.com",
+    "dof": "27/04/1988"
+  }]
+}

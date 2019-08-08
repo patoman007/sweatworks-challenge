@@ -51,12 +51,16 @@ export class PaginatorModel implements PaginatorInterface {
     return `Page ${ this.currentPage }/${ this.totalPages }`;
   }
 
+  get itemsPerPageInfo(): string {
+    return `Items per page: ${ this.itemsPerPage }`;
+  }
+
   get itemsInfo(): string {
     return `Total items: ${ this.totalItems }`;
   }
 
-  get itemsAndPagesInfo(): string {
-    return `${ this.pagesInfo } - ${ this.itemsInfo }`;
+  get paginatorInfo(): string {
+    return `${ this.pagesInfo } - ${ this.itemsPerPageInfo } - ${ this.itemsInfo }`;
   }
 
   incrementCurrentPage() {

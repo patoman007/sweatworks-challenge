@@ -1,25 +1,3 @@
-<mat-list role="list">
-  <ng-container *ngIf="shouldShowLoadingAuthors; else authorsTemplate">
-    <app-authors-loading [label]="model.labels.loading"></app-authors-loading>
-  </ng-container>
-</mat-list>
-
-<ng-template #authorsTemplate>
-  <ng-container *ngIf="shouldShowEmptyAuthorsMessage; else authorsListTemplate">
-    <div class="authors-empty">
-      <p>{{ model.labels.emptyAuthors }}</p>
-    </div>
-  </ng-container>
-</ng-template>
-
-<ng-template #authorsListTemplate>
-
-  <div class="authors-list">
-    <h4>{{ model.labels.listHeader }}</h4>
-    <ng-container *ngFor="let author of model.authors">
-      <mat-list-item role="listitem" appUiHoverable (click)="tapOnAuthor(author)">
-        {{ author.fullName }}
-      </mat-list-item>
-    </ng-container>
-  </div>
-</ng-template>
+<div class="container">
+  <app-authors-list></app-authors-list>
+</div>

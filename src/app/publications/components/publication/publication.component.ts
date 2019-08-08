@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PublicationModel } from './publication.manger';
+import { PublicationModel } from '../../../shared/publications/publications.manager';
+
 
 @Component({
   selector: 'app-publication',

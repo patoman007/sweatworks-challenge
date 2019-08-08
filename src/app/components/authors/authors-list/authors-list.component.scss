@@ -1,0 +1,21 @@
+.authors-list {
+  padding: 4px;
+
+  h4 {
+    margin: 4px;
+  }
+
+  ::ng-deep .mat-list-item {
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .authors-list {
+    padding: 8px;
+
+    h4 {
+      margin: 8px;
+    }
+  }
+}

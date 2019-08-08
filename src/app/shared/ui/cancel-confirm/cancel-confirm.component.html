@@ -1,0 +1,9 @@
+<div class="container">
+  <ng-container *ngIf="model.buttons.cancel">
+    <app-ui-button class="action" [model]="model.buttons.cancel"></app-ui-button>
+  </ng-container>
+
+  <ng-container *ngIf="model.buttons.confirm">
+    <app-ui-button class="action" [model]="model.buttons.confirm"></app-ui-button>
+  </ng-container>
+</div>

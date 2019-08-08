@@ -6,7 +6,7 @@
 
     <div class="action-buttons">
       <ng-container *ngFor="let button of model.actionButtons">
-        <app-ui-button [model]="button"></app-ui-button>
+        <app-ui-button [model]="button" (click)="button.onClick()"></app-ui-button>
       </ng-container>
     </div>
   </header>

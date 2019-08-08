@@ -1,0 +1,24 @@
+.container {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 10px;
+
+  .action {
+    &:first-child {
+      justify-self: start;
+      align-self: center;
+    }
+
+    &:last-child {
+      justify-self: end;
+      align-self: center;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    grid-column-gap: 20px;
+  }
+}

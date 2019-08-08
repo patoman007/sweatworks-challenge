@@ -4,16 +4,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MaterialModule } from './shared/material/material.module';
+import { FormModule } from './shared/form/form.module';
 import { UiModule } from './shared/ui/ui.module';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppService } from './app.service';
+import { AuthorsService } from './shared/authors/authors.service';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { AuthorsLoadingComponent } from './components/sidenav/authors-loading/authors-loading.component';
-import { FooterComponent } from './components/footer/footer.component';
+import { APP_COMPONENTS } from './app.common';
+
 
 
 @NgModule({
@@ -22,17 +22,15 @@ import { FooterComponent } from './components/footer/footer.component';
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
+    FormModule,
     UiModule,
     AppRoutingModule
   ],
   declarations: [
     AppComponent,
-    NavbarComponent,
-    SidenavComponent,
-    AuthorsLoadingComponent,
-    FooterComponent,
+    APP_COMPONENTS
   ],
-  providers: [AppService],
+  providers: [AppService, AuthorsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

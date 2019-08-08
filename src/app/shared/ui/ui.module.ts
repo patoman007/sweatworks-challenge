@@ -4,6 +4,7 @@ import { MatButtonModule, MatIconModule, MatProgressBarModule } from '@angular/m
 
 import { AlertMessageComponent } from './alert-message/alert-message.component';
 import { ButtonComponent } from './button/button.component';
+import { CancelConfirmComponent } from './cancel-confirm/cancel-confirm.component';
 import { CubeSpinnerComponent } from './cube-spinner/cube-spinner.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
@@ -15,6 +16,7 @@ import { UiHoverableDirective } from './hoverable/ui-hoverable.directive';
 const COMPONENTS = [
   AlertMessageComponent,
   ButtonComponent,
+  CancelConfirmComponent,
   CubeSpinnerComponent,
   PaginatorComponent,
   ProgressBarComponent,

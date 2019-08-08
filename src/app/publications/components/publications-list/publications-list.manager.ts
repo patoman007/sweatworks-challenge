@@ -1,18 +1,25 @@
-import { AlertMessageInterface } from '../../../shared/ui/alert-message/alert-message.manager';
+import {
+  SearchBarInterface,
+  SearchBarManager
+} from '../../../shared/ui/search-bar/search-bar.manager';
 
-import { SectionHeaderInterface } from '../../../shared/ui/section-header/section-header.manager';
-import { ButtonInterface } from '../../../shared/ui/button/button.manager';
-import { AuthorModel, PublicationModel } from '../publication/publication.manger';
-import { SearchBarInterface, SearchBarManager } from '../../../shared/ui/search-bar/search-bar.manager';
 import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
+import { ButtonInterface } from '../../../shared/ui/button/button.manager';
+import { SectionHeaderInterface } from '../../../shared/ui/section-header/section-header.manager';
+import {
+  AlertMessageInterface,
+  AlertMessageManager
+} from '../../../shared/ui/alert-message/alert-message.manager';
 
-import { Alignment } from '../../../shared/alignment/alignment.enum';
-import Color from '../../../shared/ui/color.enum';
-import { PublicationsResponseInterface } from '../../../shared/publication/publications-response.manager';
+import { PublicationModel } from '../../../shared/publications/publications.manager';
+import { AuthorModel } from '../../../shared/authors/authors.manager';
+
 import {
   PublicationsSortDataInterface,
   PublicationsSortManager
 } from '../publications-sort/publications-sort.manager';
+
+import Color from '../../../shared/ui/color.enum';
 
 export enum SortPublicationsBy {
   TitleAsc = 'titleAsc',
@@ -27,6 +34,7 @@ export interface PublicationsListDataLabelsInterface {
   loadingPublications: string;
   loadingPublicationsFailed: string;
   emptyPublications: string;
+  emptyAuthorPublications: string;
   searchPublicationsPlaceholder: string;
   emptySearchResult: string;
   sortByTitleAsc: string;
@@ -38,6 +46,7 @@ export interface PublicationsListDataLabelsInterface {
 export interface PublicationsListDataAlertMessagesInterface {
   loadingPublicationsErrorMessage: AlertMessageInterface;
   emptyPublicationsMessage: AlertMessageInterface;
+  emptyAuthorPublicationsMessage: AlertMessageInterface;
   emptySearchResultMessage: AlertMessageInterface;
 }
 
@@ -56,7 +65,7 @@ export interface PublicationsListDataInterface {
   searchBar: SearchBarInterface;
   paginator: PaginatorModel;
   sorter: PublicationsSortDataInterface;
-  publications: PublicationsListDataPublicationsInterface;
+  data: PublicationsListDataPublicationsInterface;
   alertMessages: PublicationsListDataAlertMessagesInterface;
 }
 
@@ -65,11 +74,12 @@ export class PublicationsListManager {
   private static Labels: PublicationsListDataLabelsInterface = {
     sectionHeader: 'Publications',
     newPublication: 'New Publication',
-    loadingPublications: 'Loading author publications, please wait ...',
-    loadingPublicationsFailed: 'Failed to retrieve publications 😌.',
+    loadingPublications: 'Loading data publications, please wait ...',
+    loadingPublicationsFailed: 'An error has occurred when trying to retrieve publications 😌',
     emptyPublications: 'Usps! no publications were found 😌, dare to create the first one!',
-    searchPublicationsPlaceholder: 'Search by title.',
-    emptySearchResult: 'Usps! no results were found 😌.',
+    emptyAuthorPublications: 'No author publications were found.',
+    searchPublicationsPlaceholder: 'Search by title',
+    emptySearchResult: 'Usps! no results were found 😌',
     sortByTitleAsc: 'Title asc',
     sortByTitleDesc: 'Title desc',
     sortByDateAsc: 'Date asc',
@@ -122,28 +132,15 @@ export class PublicationsListManager {
     areFiltered: false
   };
 
-  private static LoadingPublicationsErrorMessage: AlertMessageInterface = {
-    type: 'error',
-    alignment: Alignment.Center,
-    label: PublicationsListManager.Labels.loadingPublicationsFailed
-  };
-
-  private static EmptyPublicationsMessage: AlertMessageInterface = {
-    type: 'info',
-    alignment: Alignment.Center,
-    label: PublicationsListManager.Labels.emptyPublications
-  };
-
-  private static EmptySearchResultMessage: AlertMessageInterface = {
-    type: 'info',
-    alignment: Alignment.Center,
-    label: PublicationsListManager.Labels.emptySearchResult
-  };
-
   private static AlertMessages: PublicationsListDataAlertMessagesInterface = {
-    loadingPublicationsErrorMessage: PublicationsListManager.LoadingPublicationsErrorMessage,
-    emptyPublicationsMessage: PublicationsListManager.EmptyPublicationsMessage,
-    emptySearchResultMessage: PublicationsListManager.EmptySearchResultMessage
+    loadingPublicationsErrorMessage: AlertMessageManager
+      .ErrorAlertMessage(PublicationsListManager.Labels.loadingPublicationsFailed),
+    emptyPublicationsMessage: AlertMessageManager
+      .InfoAlertMessage(PublicationsListManager.Labels.emptyPublications),
+    emptyAuthorPublicationsMessage: AlertMessageManager
+      .InfoAlertMessage(PublicationsListManager.Labels.emptyAuthorPublications),
+    emptySearchResultMessage: AlertMessageManager
+      .InfoAlertMessage(PublicationsListManager.Labels.emptySearchResult)
   };
 
   static Data: PublicationsListDataInterface = {
@@ -152,37 +149,14 @@ export class PublicationsListManager {
     searchBar: PublicationsListManager.SearchBar,
     paginator: null,
     sorter: PublicationsListManager.Sorter,
-    publications: PublicationsListManager.PublicationsData,
+    data: PublicationsListManager.PublicationsData,
     alertMessages: PublicationsListManager.AlertMessages
   };
 
-  private static FilterPublicationsByTitle(publications: PublicationModel[], filter: string): PublicationModel[] {
+  private static FilterPublicationsByTitle(publications: PublicationModel[],
+                                           filter: string): PublicationModel[] {
     return publications
       .filter(publication => publication.doesTitleContains(filter));
-  }
-
-  private static PublicationsByTitleAsc(a: PublicationModel, b: PublicationModel): number {
-    const titleA = a.title.toLowerCase();
-    const titleB = b.title.toLowerCase();
-    return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
-  }
-
-  private static PublicationsByTitleDesc(a: PublicationModel, b: PublicationModel): number {
-    const titleA = a.title.toLowerCase();
-    const titleB = b.title.toLowerCase();
-    return titleA < titleB ? 1 : titleA > titleB ? -1 : 0;
-  }
-
-  private static PublicationsByDateAsc(a: PublicationModel, b: PublicationModel): number {
-    const dateA = new Date(a.datetime);
-    const dateB = new Date(b.datetime);
-    return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
-  }
-
-  private static PublicationsByDateDesc(a: PublicationModel, b: PublicationModel): number {
-    const dateA = new Date(a.datetime);
-    const dateB = new Date(b.datetime);
-    return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
   }
 
   static UpdateSectionHeader(newPublication: () => void) {
@@ -197,18 +171,7 @@ export class PublicationsListManager {
     const errorLabel = PublicationsListManager.Labels.loadingPublicationsFailed
       + '\n\nError: ' + errorMessages.join(' - ');
     PublicationsListManager.Data.alertMessages.loadingPublicationsErrorMessage.label = errorLabel;
-    PublicationsListManager.Data.publications.loadingError = true;
-  }
-
-  static PublicationFromResponse(response: PublicationsResponseInterface): PublicationModel[] {
-    if (!response.succeed) { return []; }
-    return response.data.map(publication => new PublicationModel(publication));
-  }
-
-  static AuthorsFromResponse(response: PublicationsResponseInterface): AuthorModel[] {
-    if (!response.succeed) { return []; }
-    return response.data
-      .map(publication => new AuthorModel(publication.author));
+    PublicationsListManager.Data.data.loadingError = true;
   }
 
   static Paginator(publications: PublicationModel[],
@@ -242,19 +205,6 @@ export class PublicationsListManager {
     const start = paginator.offset;
     const end = paginator.offset + paginator.itemsPerPage;
     return filteredPublications.slice(start, end);
-  }
-
-  static SortPublications(publications: PublicationModel[], by: SortPublicationsBy): PublicationModel[] {
-    switch (by) {
-      case SortPublicationsBy.TitleAsc:
-        return publications.sort(PublicationsListManager.PublicationsByTitleAsc);
-      case SortPublicationsBy.TitleDesc:
-        return publications.sort(PublicationsListManager.PublicationsByTitleDesc);
-      case SortPublicationsBy.DateAsc:
-        return publications.sort(PublicationsListManager.PublicationsByDateAsc);
-      case SortPublicationsBy.DateDesc:
-        return publications.sort(PublicationsListManager.PublicationsByDateDesc);
-    }
   }
 
 }

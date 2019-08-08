@@ -1,0 +1,14 @@
+mat-form-field {
+  display: block;
+  max-width: 135px;
+  margin: 8px auto;
+  font-size: 12px;
+}
+
+@media screen and (min-width: 768px) {
+  mat-form-field {
+    max-width: 90%;
+    margin: 4px auto;
+    font-size: 16px;
+  }
+}

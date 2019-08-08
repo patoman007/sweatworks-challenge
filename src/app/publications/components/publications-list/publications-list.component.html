@@ -47,10 +47,16 @@
 </ng-template>
 
 <ng-template #publicationsListContentTemplate>
-  <ul>
-    <ng-container *ngFor="let publication of model.publications.displayed">
-      <app-publication [model]="publication"></app-publication>
-    </ng-container>
-  </ul>
+  <ng-container *ngIf="model.data.displayed.length > 0; else authorPublicationsEmptyTemplate">
+    <ul>
+      <ng-container *ngFor="let publication of model.data.displayed">
+        <app-publication [model]="publication"></app-publication>
+      </ng-container>
+    </ul>
+  </ng-container>
+</ng-template>
+
+<ng-template #authorPublicationsEmptyTemplate>
+  <app-ui-alert-message [model]="model.alertMessages.emptyAuthorPublicationsMessage"></app-ui-alert-message>
 </ng-template>
 

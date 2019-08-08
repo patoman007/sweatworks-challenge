@@ -1,0 +1,28 @@
+<ng-container *ngIf="shouldShowLoadingAuthors; else loadedAuthorsListTemplate">
+  <app-authors-loading [label]="model.labels.loadingAuthors"></app-authors-loading>
+</ng-container>
+
+<ng-template #loadedAuthorsListTemplate>
+  <ng-container *ngIf="shouldShowLoadingErrorMessage; else authorsListTemplate">
+    <app-ui-alert-message [model]="model.messages.authorsLoadedError"></app-ui-alert-message>
+  </ng-container>
+</ng-template>
+
+<ng-template #authorsListTemplate>
+  <ng-container *ngIf="shouldShowAuthorsList; else emptyAuthorsListTemplate">
+    <div class="authors-list">
+      <h4>{{ model.labels.header }}</h4>
+      <mat-list role="list">
+        <ng-container *ngFor="let author of model.data.authors">
+          <mat-list-item role="listitem" appUiHoverable (click)="tapOnAuthor(author)">
+            {{ author.fullName }}
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyAuthorsListTemplate>
+  <app-ui-alert-message [model]="model.messages.emptyAuthors"></app-ui-alert-message>
+</ng-template>

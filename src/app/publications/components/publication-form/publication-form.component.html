@@ -1,0 +1,15 @@
+<div class="container">
+  <div mat-dialog-title>
+    <app-ui-section-header [model]="model.sectionHeader"></app-ui-section-header>
+  </div>
+
+  <div class="form" mat-dialog-content>
+    <ng-container *ngFor="let input of model.publicationForm">
+      <app-form-input [model]="input"></app-form-input>
+    </ng-container>
+  </div>
+
+  <div class="actions">
+    <app-ui-cancel-confirm [model]="model.actions"></app-ui-cancel-confirm>
+  </div>
+</div>

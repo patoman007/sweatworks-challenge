@@ -7,7 +7,8 @@ export interface SectionHeaderInterface {
 
 export class SectionHeaderManager {
 
-  static SectionHeader(title: string, actionButtons: ButtonInterface[] = []): SectionHeaderInterface {
+  static SectionHeader(title: string,
+                       actionButtons: ButtonInterface[] = []): SectionHeaderInterface {
     return { title, actionButtons };
   }
 

@@ -1,9 +1,13 @@
 .container {
+  .actions {
 
+  }
 }
 
 @media screen and (min-width: 768px) {
   .container {
-
+    .actions {
+      margin: 0 20px;
+    }
   }
 }

@@ -20,4 +20,12 @@ export class ButtonManager {
     return { type, label, bgColor, fontColor, onClick };
   }
 
+  static ConfirmButton(label: string, onClick: () => void): ButtonInterface {
+    return ButtonManager.Button(label, 'raised', Color.Confirm, Color.White, onClick);
+  }
+
+  static CancelButton(label: string, onClick: () => void): ButtonInterface {
+    return ButtonManager.Button(label, 'raised', Color.Cancel, Color.White, onClick);
+  }
+
 }

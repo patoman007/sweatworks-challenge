@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonToggleModule } from '@angular/material';
+import { MatButtonToggleModule, MatDialogModule } from '@angular/material';
 
+import { FormModule } from '../shared/form/form.module';
 import { UiModule } from '../shared/ui/ui.module';
 import { PublicationsRoutingModule } from './publications-routing.module';
 
@@ -12,12 +13,15 @@ import {
 } from './components/publications-list/publications-list.component';
 import { PublicationComponent } from './components/publication/publication.component';
 import { PublicationsSortComponent } from './components/publications-sort/publications-sort.component';
+import { PublicationFormComponent } from './components/publication-form/publication-form.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
     MatButtonToggleModule,
+    MatDialogModule,
+    FormModule,
     UiModule,
     PublicationsRoutingModule
   ],
@@ -27,7 +31,11 @@ import { PublicationsSortComponent } from './components/publications-sort/public
   declarations: [
     PublicationsListComponent,
     PublicationComponent,
-    PublicationsSortComponent
+    PublicationsSortComponent,
+    PublicationFormComponent
   ],
+  entryComponents: [
+    PublicationFormComponent
+  ]
 })
 export class PublicationsModule { }
