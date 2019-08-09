@@ -1,7 +1,7 @@
 import { AuthorsResponseInterface } from './authors-response.manager';
 
 export interface AuthorInterface {
-  id?: number;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -10,7 +10,7 @@ export interface AuthorInterface {
 
 export class AuthorModel implements AuthorInterface {
 
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

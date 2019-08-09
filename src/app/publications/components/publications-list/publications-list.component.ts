@@ -176,7 +176,7 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
     this.updatePaginatedPublications();
   }
 
-  private handleSort(sortBy: string) {
+  handleSort(sortBy: string) {
     const publications = this.model.data.displayed;
     this.model.data.displayed = PublicationsSortManager
       .SortPublications(publications, sortBy as SortPublicationsBy);
