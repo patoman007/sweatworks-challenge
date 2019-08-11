@@ -37,17 +37,7 @@
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
                 "with": "src/environments/environment.dev.ts"
-              }],
-              "optimization": true,
-              "outputHashing": "none",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": false,
-
+              }]
             },
             "production": {
               "fileReplacements": [
@@ -88,6 +78,9 @@
           "configurations": {
             "production": {
               "browserTarget": "sweatworks-challenge:build:production"
+            },
+            "dev": {
+              "browserTarget": "sweatworks-challenge:build:dev"
             }
           }
         },

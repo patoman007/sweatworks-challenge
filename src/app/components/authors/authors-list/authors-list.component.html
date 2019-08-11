@@ -18,6 +18,10 @@
             {{ author.fullName }}
           </mat-list-item>
         </ng-container>
+
+        <mat-list-item role="listitem" appUiHoverable (click)="tapOnAuthor(null)">
+          All publications
+        </mat-list-item>
       </mat-list>
     </div>
   </ng-container>

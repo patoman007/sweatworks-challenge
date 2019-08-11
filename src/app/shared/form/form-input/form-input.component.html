@@ -9,7 +9,12 @@
 </ng-container>
 
 <ng-container *ngIf="model && model.type === 'select'">
-
+  <app-select-input [placeholder]="model.placeholder"
+                    [options]="model.selectOptions"
+                    [control]="model.control"
+                    [hintMessage]="model.hintMessage"
+                    [errorMessage]="model.errorMessage">
+  </app-select-input>
 </ng-container>
 
 <ng-container *ngIf="model && model.type === 'date'">

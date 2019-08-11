@@ -8,9 +8,13 @@
     <p>{{ model.body }}</p>
   </div>
 
+  <div class="information" *ngIf="deleting">
+    <app-ui-progress-bar [label]="data.labels.deleting"></app-ui-progress-bar>
+  </div>
+
   <div class="foot">
     <div class="author">
-      <p class="sub-title">{{ model.author.fullName }}</p>
+      <p class="sub-title">{{ model.authorDisplayedName }}</p>
     </div>
 
     <div class="actions">

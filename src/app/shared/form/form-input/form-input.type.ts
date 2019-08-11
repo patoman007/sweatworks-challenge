@@ -1,1 +1,1 @@
-export type formInputType = 'input' | 'select' | 'date';
+export type formInputType = 'input' | 'select' | 'date' | 'hidden';

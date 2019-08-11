@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthorModel, AuthorsManager } from '../../../shared/authors/authors.manager';
+import {
+  AuthorModel,
+  AuthorsManager
+} from '../../../shared/authors/authors.manager';
+
 import { AuthorsListManager } from './authors-list.manager';
 
 import { AuthorsService } from '../../../shared/authors/authors.service';
 import { AppService } from '../../../app.service';
 
-import { AuthorsResponseInterface } from '../../../shared/authors/authors-response.manager';
+import {
+  AuthorsResponseInterface
+} from '../../../shared/authors/authors-response.manager';
 
 
 @Component({

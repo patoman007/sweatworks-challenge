@@ -40,7 +40,8 @@ export class AuthorsListManager {
   private static Messages: AuthorsListDataMessagesInterface = {
     authorsLoadedError: AlertMessageManager
       .ErrorAlertMessage(AuthorsListManager.Labels.loadingAuthorsError),
-    emptyAuthors: AlertMessageManager.InfoAlertMessage(AuthorsListManager.Labels.emptyAuthors)
+    emptyAuthors: AlertMessageManager
+      .InfoAlertMessage(AuthorsListManager.Labels.emptyAuthors)
   };
 
   private static AuthorsData: AuthorsListDataAuthorsInterface = {
@@ -57,7 +58,9 @@ export class AuthorsListManager {
 
   static UpdatedLoadedAuthorsErrorLabel(errorMessages: string[]): string {
     const label = AuthorsListManager.Labels.loadingAuthorsError;
-    return errorMessages.length === 0 ? label : (label + ' Error: ' + errorMessages.join(' - '));
+    return errorMessages.length === 0
+      ? label
+      : (label + ' Error: ' + errorMessages.join(' - '));
   }
 
 }

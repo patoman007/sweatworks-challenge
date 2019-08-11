@@ -1,9 +1,15 @@
 <div class="container">
   <ng-container *ngIf="model.buttons.cancel">
-    <app-ui-button class="action" [model]="model.buttons.cancel"></app-ui-button>
+    <app-ui-button class="action"
+                   [model]="model.buttons.cancel"
+                   (click)="model.buttons.cancel.onClick()">
+    </app-ui-button>
   </ng-container>
 
   <ng-container *ngIf="model.buttons.confirm">
-    <app-ui-button class="action" [model]="model.buttons.confirm"></app-ui-button>
+    <app-ui-button class="action"
+                   [model]="model.buttons.confirm"
+                   (click)="model.buttons.confirm.onClick()">
+    </app-ui-button>
   </ng-container>
 </div>

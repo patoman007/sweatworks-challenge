@@ -6,19 +6,32 @@ import {
   MatDatepickerModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatNativeDateModule,
   MatOptionModule,
   MatSelectModule
 } from '@angular/material';
 
 import { DateInputComponent } from './date-input/date-input.component';
 import { FormInputComponent } from './form-input/form-input.component';
+import { HiddenInputComponent } from './hidden-input/hidden-input.component';
 import { SelectInputComponent } from './select-input/select-input.component';
 import { TextInputComponent } from './text-input/text-input.component';
+
+const MATERIAL_MODULES = [
+  MatButtonModule,
+  MatDatepickerModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatNativeDateModule,
+  MatOptionModule,
+  MatSelectModule,
+];
 
 const COMPONENTS = [
   DateInputComponent,
   FormInputComponent,
+  HiddenInputComponent,
   SelectInputComponent,
   TextInputComponent
 ];
@@ -28,13 +41,7 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatIconModule
+    ...MATERIAL_MODULES
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

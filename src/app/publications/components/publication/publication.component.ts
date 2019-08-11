@@ -1,5 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PublicationModel } from '../../../shared/publications/publications.manager';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { PublicationManager } from './publication.manager';
+
+import { PublicationsService } from '../../services/publications.service';
+
+import {
+  PublicationModel
+} from '../../../shared/publications/publications.manager';
 
 
 @Component({
@@ -7,21 +14,18 @@ import { PublicationModel } from '../../../shared/publications/publications.mana
   templateUrl: './publication.component.html',
   styleUrls: ['./publication.component.scss']
 })
-export class PublicationComponent implements OnInit {
+export class PublicationComponent {
+
+  data = PublicationManager.Data;
+  deleting = false;
 
   @Input()
   model: PublicationModel;
 
   @Output()
-  edit = new EventEmitter<number>();
+  edit = new EventEmitter<string>();
 
-  @Output()
-  delete = new EventEmitter<number>();
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor(private publicationsService: PublicationsService) { }
 
   onEdit() {
     if (!this.model.id) { return; }
@@ -30,7 +34,12 @@ export class PublicationComponent implements OnInit {
 
   onDelete() {
     if (!this.model.id) { return; }
-    this.delete.emit(this.model.id);
+
+    this.deleting = true;
+    this.publicationsService.deletePublication(this.model.id)
+      .subscribe(() => {
+        this.deleting = false;
+      });
   }
 
 }

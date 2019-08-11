@@ -1,4 +1,9 @@
-import { AbstractControlOptions, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControlOptions,
+  FormControl,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 
 import { formInputType } from './form-input.type';
 
@@ -7,11 +12,23 @@ import { SelectOptionInterface } from '../select-input/select-option.interface';
 
 export class FormInputManager {
 
-  static From(type: formInputType, name: string, control: FormControl, placeholder: string = '',
-              errorMessage: string = '', hintMessage: string = '', inputType?: string,
+  static From(type: formInputType,
+              name: string,
+              control: FormControl,
+              placeholder: string = '',
+              errorMessage: string = '',
+              hintMessage: string = '',
+              inputType?: string,
               selectOptions?: SelectOptionInterface[]): FormInputInterface {
     return {
-      type, name,  control, placeholder, errorMessage, hintMessage, inputType, selectOptions
+      type,
+      name,
+      control,
+      placeholder,
+      errorMessage,
+      hintMessage,
+      inputType,
+      selectOptions
     };
   }
 

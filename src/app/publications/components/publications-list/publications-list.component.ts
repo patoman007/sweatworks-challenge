@@ -1,24 +1,43 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 
 import { Subscription } from 'rxjs';
 
 import {
+  PublicationInterface,
   PublicationModel,
   PublicationsManager
 } from '../../../shared/publications/publications.manager';
-import { PublicationsListManager, SortPublicationsBy } from './publications-list.manager';
-import { PublicationsSortManager } from '../publications-sort/publications-sort.manager';
-import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
-import { AuthorModel } from '../../../shared/authors/authors.manager';
+
+import {
+  PublicationsListManager,
+  SortPublicationsBy
+} from './publications-list.manager';
+
+import {
+  PublicationsSortManager
+} from '../publications-sort/publications-sort.manager';
 
 import { AppService } from '../../../app.service';
 import { PublicationsService } from '../../services/publications.service';
 
 import {
+  PublicationFormComponent
+} from '../publication-form/publication-form.component';
+
+import {
   PublicationsResponseInterface
 } from '../../../shared/publications/publications-response.manager';
-import { MatDialog } from '@angular/material';
-import { PublicationFormComponent } from '../publication-form/publication-form.component';
+
+import { AuthorModel } from '../../../shared/authors/authors.manager';
+
+import {
+  PaginatorModel
+} from '../../../shared/ui/paginator/paginator.manager';
+
+import {
+  PublicationFormMode
+} from '../publication-form/publication-form.manager';
 
 
 @Component({
@@ -29,6 +48,7 @@ import { PublicationFormComponent } from '../publication-form/publication-form.c
 export class PublicationsListComponent implements OnInit, OnDestroy {
 
   private authorSelectionSubscription: Subscription;
+  private publicationsChangesSubscription: Subscription;
 
   model = PublicationsListManager.Data;
 
@@ -63,11 +83,15 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
     this.bindSectionHeader();
     this.bindSearchBar();
     this.initPublications();
+    this.listenToPublicationsChanges();
   }
 
   ngOnDestroy() {
     if (!this.authorSelectionSubscription) { return; }
     this.authorSelectionSubscription.unsubscribe();
+
+    if (!this.publicationsChangesSubscription) { return; }
+    this.publicationsChangesSubscription.unsubscribe();
   }
 
   private listenToAuthorSelection() {
@@ -89,9 +113,21 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
       .subscribe(res => this.handlePublicationsResponse(res));
   }
 
+  private listenToPublicationsChanges() {
+    this.publicationsChangesSubscription = this.publicationsService
+      .publicationsHasChanged
+      .subscribe(publications => {
+        this.handlePublicationsChanges(publications);
+      });
+  }
+
   private handleAuthorSelection(author: AuthorModel) {
     const publications = this.model.data.publications;
-    this.model.sectionHeader.title = PublicationsListManager.UpdatedAuthorHeader(author);
+    const title = author
+      ? PublicationsListManager.UpdatedAuthorHeader(author)
+      : this.model.labels.sectionHeader;
+
+    this.model.sectionHeader.title = title;
     this.model.data.displayed = PublicationsListManager
       .PublicationsFilteredByAuthor(publications, author);
   }
@@ -112,6 +148,15 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
     this.model.data.publications = publications;
     this.model.data.displayed = publications;
     this.model.data.loading = false;
+  }
+
+  private handlePublicationsChanges(publications: PublicationInterface[]) {
+    const updatedPublications = publications
+      .map(updatedPublication => new PublicationModel(updatedPublication));
+
+    this.model.data.publications = updatedPublications;
+    this.model.data.filtered = [];
+    this.model.data.displayed = updatedPublications;
   }
 
   private updateFilteredPublications(publications: PublicationModel[], filter: string) {
@@ -154,8 +199,9 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
   }
 
   private newPublication() {
-    console.log('Open!');
-    this.dialog.open(PublicationFormComponent);
+    const mode = PublicationFormMode.Creation;
+    const config = PublicationsListManager.PublicationFormDialogData(mode);
+    this.dialog.open(PublicationFormComponent, config);
   }
 
   private previousPage() {
@@ -180,6 +226,15 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
     const publications = this.model.data.displayed;
     this.model.data.displayed = PublicationsSortManager
       .SortPublications(publications, sortBy as SortPublicationsBy);
+  }
+
+  editPublicationHandler(publicationId: string) {
+    const mode = PublicationFormMode.Edition;
+    const publication = PublicationsListManager.PublicationById(publicationId);
+    const config = PublicationsListManager
+      .PublicationFormDialogData(mode, publication);
+
+    this.dialog.open(PublicationFormComponent, config);
   }
 
 }

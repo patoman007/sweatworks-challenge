@@ -9,6 +9,16 @@
     </ng-container>
   </div>
 
+  <div class="form-information" [ngClass]="{ 'error': model.informationIsAnError }">
+    <div *ngIf="model.requesting">
+      <app-ui-progress-bar [label]="requestingLabel"></app-ui-progress-bar>
+    </div>
+
+    <ng-container *ngIf="model.informationMessage">
+      <p>{{ model.informationMessage }}</p>
+    </ng-container>
+  </div>
+
   <div class="actions">
     <app-ui-cancel-confirm [model]="model.actions"></app-ui-cancel-confirm>
   </div>

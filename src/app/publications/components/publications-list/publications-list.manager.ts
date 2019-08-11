@@ -1,25 +1,18 @@
-import {
-  SearchBarInterface,
-  SearchBarManager
-} from '../../../shared/ui/search-bar/search-bar.manager';
+import { SearchBarInterface, SearchBarManager } from '../../../shared/ui/search-bar/search-bar.manager';
 
 import { PaginatorModel } from '../../../shared/ui/paginator/paginator.manager';
 import { ButtonInterface } from '../../../shared/ui/button/button.manager';
 import { SectionHeaderInterface } from '../../../shared/ui/section-header/section-header.manager';
-import {
-  AlertMessageInterface,
-  AlertMessageManager
-} from '../../../shared/ui/alert-message/alert-message.manager';
+import { AlertMessageInterface, AlertMessageManager } from '../../../shared/ui/alert-message/alert-message.manager';
 
 import { PublicationModel } from '../../../shared/publications/publications.manager';
 import { AuthorModel } from '../../../shared/authors/authors.manager';
 
-import {
-  PublicationsSortDataInterface,
-  PublicationsSortManager
-} from '../publications-sort/publications-sort.manager';
+import { PublicationsSortDataInterface, PublicationsSortManager } from '../publications-sort/publications-sort.manager';
 
 import Color from '../../../shared/ui/color.enum';
+import { PublicationFormDialogDataInterface, PublicationFormMode } from '../publication-form/publication-form.manager';
+import { MatDialogConfig } from '@angular/material';
 
 export enum SortPublicationsBy {
   TitleAsc = 'titleAsc',
@@ -74,7 +67,7 @@ export class PublicationsListManager {
   private static Labels: PublicationsListDataLabelsInterface = {
     sectionHeader: 'Publications',
     newPublication: 'New Publication',
-    loadingPublications: 'Loading data publications, please wait ...',
+    loadingPublications: 'Loading publications data, please wait ...',
     loadingPublicationsFailed: 'An error has occurred when trying to retrieve publications 😌',
     emptyPublications: 'Usps! no publications were found 😌, dare to create the first one!',
     emptyAuthorPublications: 'No author publications were found.',
@@ -159,6 +152,11 @@ export class PublicationsListManager {
       .filter(publication => publication.doesTitleContains(filter));
   }
 
+  static PublicationById(publicationId: string): PublicationModel | null {
+    return PublicationsListManager.Data.data.publications
+      .find(pub => pub.id === publicationId);
+  }
+
   static UpdateSectionHeader(newPublication: () => void) {
     PublicationsListManager.Data.sectionHeader.actionButtons[0].onClick = newPublication;
   }
@@ -189,8 +187,10 @@ export class PublicationsListManager {
 
   static PublicationsFilteredByAuthor(publications: PublicationModel[],
                                       author: AuthorModel): PublicationModel[] {
-    return publications
-      .filter(publication => publication.belongsToAuthor(author));
+    return !author
+      ? publications
+      : publications
+        .filter(publication => publication.belongsToAuthor(author));
   }
 
   static PublicationsFilteredByTitle(publications: PublicationModel[],
@@ -205,6 +205,12 @@ export class PublicationsListManager {
     const start = paginator.offset;
     const end = paginator.offset + paginator.itemsPerPage;
     return filteredPublications.slice(start, end);
+  }
+
+  static PublicationFormDialogData(mode: PublicationFormMode,
+                                   publication?: PublicationModel): MatDialogConfig {
+    const data: PublicationFormDialogDataInterface = { mode, publication };
+    return { data };
   }
 
 }

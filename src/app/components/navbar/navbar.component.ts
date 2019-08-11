@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 import { NavbarManager } from './navbar.manager';
 
@@ -7,7 +7,7 @@ import { NavbarManager } from './navbar.manager';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
 
   data = NavbarManager.Data;
 
@@ -15,8 +15,5 @@ export class NavbarComponent implements OnInit {
   toggle = new EventEmitter();
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

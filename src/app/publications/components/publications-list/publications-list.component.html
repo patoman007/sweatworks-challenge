@@ -16,17 +16,20 @@
 <ng-template #publicationsListTemplate>
   <ng-container *ngIf="shouldShowPublicationsList; else emptyPublicationsListTemplate">
     <div class="publications-list">
-      <ng-container *ngTemplateOutlet="publicationsListSearchTemplate"></ng-container>
+      <ng-container *ngTemplateOutlet="publicationsListSearchTemplate">
+      </ng-container>
 
       <ng-container *ngIf="shouldShowEmptyResultMessage; else publicationsListContentTemplate">
-        <app-ui-alert-message [model]="model.alertMessages.emptySearchResultMessage"></app-ui-alert-message>
+        <app-ui-alert-message [model]="model.alertMessages.emptySearchResultMessage">
+        </app-ui-alert-message>
       </ng-container>
     </div>
   </ng-container>
 </ng-template>
 
 <ng-template #emptyPublicationsListTemplate>
-  <app-ui-alert-message [model]="model.alertMessages.emptyPublicationsMessage"></app-ui-alert-message>
+  <app-ui-alert-message [model]="model.alertMessages.emptyPublicationsMessage">
+  </app-ui-alert-message>
 </ng-template>
 
 <ng-template #publicationsListSearchTemplate>
@@ -50,7 +53,9 @@
   <ng-container *ngIf="model.data.displayed.length > 0; else authorPublicationsEmptyTemplate">
     <ul>
       <ng-container *ngFor="let publication of model.data.displayed">
-        <app-publication [model]="publication"></app-publication>
+        <app-publication [model]="publication"
+                         (edit)="editPublicationHandler($event)">
+        </app-publication>
       </ng-container>
     </ul>
   </ng-container>
