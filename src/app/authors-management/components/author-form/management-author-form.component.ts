@@ -133,6 +133,7 @@ export class ManagementAuthorFormComponent implements OnInit, OnDestroy {
                                response: NewAuthorResponseInterface) {
     if (!response.succeed) {
       this.operationFailed(mode, response.errorMessages[0]);
+      return;
     }
 
     this.model.informationIsAnError = false;
