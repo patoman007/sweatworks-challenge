@@ -17,6 +17,7 @@ import {
   PublicationsResponseInterface,
   PublicationsResponseManager
 } from '../../shared/publications/publications-response.manager';
+import { AuthorsService } from '../../shared/authors/authors.service';
 
 type PublicationsResponse = Observable<PublicationsResponseInterface>;
 type NewPublicationResponse = Observable<NewPublicationResponseInterface>;
@@ -30,20 +31,25 @@ export class PublicationsService {
 
   publicationsHasChanged = new EventEmitter<PublicationInterface[]>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private authorsService: AuthorsService) { }
 
   private tapPublicationsResponse(response: PublicationsResponseInterface) {
     if (!response.succeed) { return; }
     this.publications = response.data;
   }
 
-  private tapNewPublicationResponse(response: NewPublicationResponseInterface) {
+  private async tapNewPublicationResponse(response: NewPublicationResponseInterface) {
     if (!response.succeed) { return; }
-    this.publications.push(response.data);
+
+    const publication = response.data;
+    publication.authorDisplayedName = await this.authorsService
+      .getAuthorDisplayedName(publication.authorId);
+    this.publications.push(publication);
     this.publicationsHasChanged.emit(this.publications);
   }
 
-  private tapUpdatePublicationResponse(res: NewPublicationResponseInterface) {
+  private async tapUpdatePublicationResponse(res: NewPublicationResponseInterface) {
     if (!res.succeed) { return; }
 
     const publication = res.data;
@@ -51,8 +57,7 @@ export class PublicationsService {
       .findIndex(pub => pub.id === publication.id);
     if (index === -1) { return; }
 
-    this.updatePublicationAtIndex(publication, index);
-    this.publicationsHasChanged.emit(this.publications);
+    await this.updatePublicationAtIndex(publication, index);
   }
 
   private tapDeletePublicationResponse(response: DeletePublicationResponseInterface) {
@@ -75,13 +80,17 @@ export class PublicationsService {
       );
   }
 
-  private updatePublicationAtIndex(publication: PublicationInterface,
-                                   index: number) {
+  private async updatePublicationAtIndex(publication: PublicationInterface,
+                                         index: number) {
     const oldPublication = this.publications[index];
     oldPublication.title = publication.title;
     oldPublication.body = publication.body;
     oldPublication.authorId = publication.authorId;
     oldPublication.datetime = publication.datetime;
+    oldPublication.authorDisplayedName = await this.authorsService
+      .getAuthorDisplayedName(oldPublication.authorId);
+
+    this.publicationsHasChanged.emit(this.publications);
   }
 
   getPublications(force: boolean = false): PublicationsResponse {
@@ -96,7 +105,7 @@ export class PublicationsService {
     const url = PublicationsManager.OperationURL(CRUDOperation.Create);
     return this.http.post<NewPublicationResponseInterface>(url, newPublication)
       .pipe(
-        tap(response => this.tapNewPublicationResponse(response))
+        tap(async (response) => await this.tapNewPublicationResponse(response))
       );
   }
 
@@ -104,7 +113,7 @@ export class PublicationsService {
     const url = PublicationsManager.OperationURL(CRUDOperation.Update);
     return this.http.post<NewPublicationResponseInterface>(url, updatedPublication)
       .pipe(
-        tap(response => this.tapUpdatePublicationResponse(response))
+        tap(async (response) => await this.tapUpdatePublicationResponse(response))
       );
   }
 

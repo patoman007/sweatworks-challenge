@@ -231,9 +231,10 @@ export class PublicationsListComponent implements OnInit, OnDestroy {
   editPublicationHandler(publicationId: string) {
     const mode = PublicationFormMode.Edition;
     const publication = PublicationsListManager.PublicationById(publicationId);
+    if (!publication) { return; }
+
     const config = PublicationsListManager
       .PublicationFormDialogData(mode, publication);
-
     this.dialog.open(PublicationFormComponent, config);
   }
 

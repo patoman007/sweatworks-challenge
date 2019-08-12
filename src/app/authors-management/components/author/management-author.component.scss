@@ -1,0 +1,51 @@
+article {
+  width: 90%;
+  padding: 0 4px;
+  margin: 0 auto 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #CCCCCC;
+
+  &:hover {
+    border: 1px solid #999999;
+  }
+
+  .author-field {
+    margin: 10px;
+
+    h5 {
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .actions {
+    text-align: right;
+
+    button {
+      color: #777777;
+      font-size: 0.9em;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background-color: transparent;
+
+      &:hover {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  article {
+    width: 70%;
+    padding: 0 8px;
+    margin: 0 auto 16px;
+
+    div {
+      margin: 18px 0;
+    }
+  }
+}

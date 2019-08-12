@@ -1,0 +1,38 @@
+.container {
+  max-width: 95%;
+  padding: 0 8px;
+  margin: 8px auto;
+
+  .authors-list {
+    padding: 0 4px;
+
+    ul {
+      padding: 0;
+      margin: 8px 0;
+    }
+  }
+
+  .error-message {
+    margin: auto;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 70%;
+    padding: 0 16px;
+    margin: 16px auto;
+
+    .authors-list {
+      padding: 0 8px;
+
+      ul {
+        margin: 16px 0;
+      }
+    }
+
+    .error-message {
+      width: 50%;
+    }
+  }
+}

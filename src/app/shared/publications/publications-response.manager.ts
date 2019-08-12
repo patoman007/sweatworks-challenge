@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs';
+
 import {
   GenericResponseInterface
 } from '../generic-response/generic-response.interface';
+
 import { PublicationInterface } from './publications.manager';
 
 export interface PublicationsResponseInterface extends GenericResponseInterface {

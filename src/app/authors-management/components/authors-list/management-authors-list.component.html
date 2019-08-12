@@ -1,0 +1,36 @@
+<div class="container">
+  <app-ui-section-header [model]="model.sectionHeader"></app-ui-section-header>
+  <ng-container *ngIf="shouldShowLoadingBar; else loadedAuthorsListTemplate">
+    <app-ui-progress-bar [label]="model.labels.information.loadingAuthors">
+    </app-ui-progress-bar>
+  </ng-container>
+</div>
+
+<ng-template #loadedAuthorsListTemplate>
+  <ng-container *ngIf="shouldShowLoadingErrorMessage; else authorsListTemplate">
+    <div class="error-message">
+      <app-ui-alert-message [model]="model.alertMessages.loadedAuthorsErrorMessage">
+      </app-ui-alert-message>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #authorsListTemplate>
+  <ng-container *ngIf="shouldShowAuthorsList; else emptyAuthorsListTemplate">
+    <div class="authors-list">
+      <ul>
+        <ng-container *ngFor="let author of model.data.authors">
+          <app-management-author [model]="author"
+                                 (edit)="editAuthorHandler($event)">
+          </app-management-author>
+        </ng-container>
+      </ul>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyAuthorsListTemplate>
+  <app-ui-alert-message [model]="model.alertMessages.emptyAuthorsMessage">
+  </app-ui-alert-message>
+</ng-template>
+

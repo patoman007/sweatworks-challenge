@@ -28,12 +28,16 @@ export class AuthorModel implements AuthorInterface {
     this.id = author.id;
     this.firstName = author.firstName;
     this.lastName = author.lastName;
-    this.email = author.lastName;
+    this.email = author.email;
     this.dof = author.dof;
   }
 
   get fullName(): string {
     return `${ this.lastName || '' }, ${ this.firstName || '' }`;
+  }
+
+  get displayedName(): string {
+    return `${ this.lastName || '' }, ${ this.firstName || '' } - ${ this.email }`;
   }
 
 }
@@ -55,6 +59,14 @@ export class AuthorsManager {
 
   static DeleteBodyRequest(authorId: string): AuthorDeleteBodyRequest {
     return { id: authorId };
+  }
+
+  static AuthorFrom(firstName: string,
+                    lastName: string,
+                    email: string,
+                    dof: string,
+                    id?: string): AuthorInterface {
+    return { firstName, lastName, email, dof, id };
   }
 
   static AuthorsFromResponse(response: AuthorsResponseInterface): AuthorModel[] {

@@ -1,0 +1,26 @@
+<article appUiHoverable>
+  <div class="author-field">
+    <h5>{{ firstName }}</h5>
+  </div>
+
+  <div class="author-field">
+    <h5>{{ lastName }}</h5>
+  </div>
+
+  <div class="author-field">
+    <h5>{{ email  }}</h5>
+  </div>
+
+  <div class="author-field">
+    <h5>{{ data.labels.dof }}: {{ model.dof | date  }}</h5>
+  </div>
+
+  <div *ngIf="deleting">
+    <app-ui-progress-bar [label]="data.labels.deleting"></app-ui-progress-bar>
+  </div>
+
+  <div class="actions">
+    <button (click)="onEdit()">[Edit]</button>
+    <button (click)="onDelete()">[Delete]</button>
+  </div>
+</article>

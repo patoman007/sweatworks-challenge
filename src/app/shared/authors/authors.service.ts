@@ -1,24 +1,25 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { AuthorsResponseInterface, AuthorsResponseManager } from './authors-response.manager';
+import {
+  AuthorsResponseInterface, AuthorsResponseManager
+} from './authors-response.manager';
 
 import { AuthorInterface, AuthorModel, AuthorsManager } from './authors.manager';
 
-import { GenericResponseInterface } from '../generic-response/generic-response.interface';
-
 import { CRUDOperation } from '../operations/operations.manager';
 
-type GenericResponse = Observable<GenericResponseInterface>;
 type AuthorsResponse = Observable<AuthorsResponseInterface>;
 
 @Injectable()
 export class AuthorsService {
 
-  private authors: AuthorModel[] = [];
+  private authors: AuthorInterface[] = [];
+
+  authorsHasChanged = new EventEmitter<AuthorInterface[]>();
 
   constructor(private http: HttpClient) { }
 
@@ -43,20 +44,24 @@ export class AuthorsService {
     return this.retrieveAuthors();
   }
 
-  createAuthor(author: AuthorInterface): GenericResponse {
-    const url = AuthorsManager.OperationURL(CRUDOperation.Create);
-    return this.http.post<GenericResponseInterface>(url, author);
+  getAuthorDisplayedName(authorId: string): Promise<string | null> {
+    return new Promise<string | null>(resolve => {
+      this.getAuthors()
+        .subscribe(response => {
+          if (!response.succeed) { resolve(null); }
+
+          const author = response.data
+            .find(auxAuthor => auxAuthor.id === authorId);
+          if (!author) { resolve(null); }
+
+          resolve(new AuthorModel(author).displayedName);
+        });
+    });
   }
 
-  updateAuthor(author: AuthorInterface) {
-    const url = AuthorsManager.OperationURL(CRUDOperation.Update);
-    return this.http.post<GenericResponseInterface>(url, author);
-  }
-
-  deleteAuthor(authorId: string): GenericResponse {
-    const url = AuthorsManager.OperationURL(CRUDOperation.Delete);
-    const data = AuthorsManager.DeleteBodyRequest(authorId);
-    return this.http.post<GenericResponseInterface>(url, data);
+  updateAuthors(authors: AuthorInterface[]) {
+    this.authors = authors;
+    this.authorsHasChanged.emit(authors);
   }
 
 }

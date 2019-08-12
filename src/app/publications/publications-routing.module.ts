@@ -6,9 +6,15 @@ import { PublicationsListComponent } from './components/publications-list/public
 import PublicationsPaths from '../shared/paths/publications-paths.enum';
 
 const publicationsRoutes: Routes = [
-  { path: PublicationsPaths.index, component: PublicationsListComponent },
-  { path: PublicationsPaths.publicationsList, component: PublicationsListComponent },
-  { path: PublicationsPaths.publicationById, component: PublicationsListComponent },
+  {
+    path: PublicationsPaths.index,
+    component: PublicationsListComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: PublicationsPaths.publicationsList,
+    component: PublicationsListComponent
+  },
   { path: '**', redirectTo: PublicationsPaths.publicationsList }
 ];
 

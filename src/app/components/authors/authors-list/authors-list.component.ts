@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 
 import {
+  AuthorInterface,
   AuthorModel,
   AuthorsManager
 } from '../../../shared/authors/authors.manager';
@@ -20,7 +23,9 @@ import {
   templateUrl: './authors-list.component.html',
   styleUrls: ['./authors-list.component.scss']
 })
-export class AuthorsListComponent implements OnInit {
+export class AuthorsListComponent implements OnInit, OnDestroy {
+
+  private authorsChangesSubscription: Subscription;
 
   model = AuthorsListManager.Data;
 
@@ -37,16 +42,28 @@ export class AuthorsListComponent implements OnInit {
       && this.model.data.authors.length > 0;
   }
 
-  constructor(private appService: AppService, private authorsService: AuthorsService) { }
+  constructor(private appService: AppService,
+              private authorsService: AuthorsService) { }
 
   ngOnInit() {
     this.initAuthors();
+    this.listenToAuthorsChanges();
+  }
+
+  ngOnDestroy() {
+    if (!this.authorsChangesSubscription) { return; }
+    this.authorsChangesSubscription.unsubscribe();
   }
 
   private initAuthors() {
     this.model.data.loading = true;
     this.authorsService.getAuthors()
       .subscribe(res => this.handleAuthorsResponse(res));
+  }
+
+  private listenToAuthorsChanges() {
+    this.authorsChangesSubscription = this.authorsService.authorsHasChanged
+      .subscribe(authors => this.handleAuthorsChanges(authors));
   }
 
   private handleAuthorsResponse(response: AuthorsResponseInterface) {
@@ -60,6 +77,10 @@ export class AuthorsListComponent implements OnInit {
 
     this.model.data.authors = AuthorsManager.AuthorsFromResponse(response);
     this.model.data.loading = false;
+  }
+
+  private handleAuthorsChanges(authors: AuthorInterface[]) {
+    this.model.data.authors = authors.map(author => new AuthorModel(author));
   }
 
   tapOnAuthor(author: AuthorModel) {

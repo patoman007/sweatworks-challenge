@@ -1,16 +1,28 @@
 import { Observable } from 'rxjs';
 
-import { AuthorModel } from './authors.manager';
+import { AuthorInterface } from './authors.manager';
 
-import { GenericResponseInterface } from '../generic-response/generic-response.interface';
+import {
+  GenericResponseInterface
+} from '../generic-response/generic-response.interface';
 
 export interface AuthorsResponseInterface extends GenericResponseInterface {
-  data: AuthorModel[];
+  data: AuthorInterface[];
+}
+
+export interface NewAuthorResponseInterface extends GenericResponseInterface {
+  data: AuthorInterface;
+}
+
+export interface DeleteAuthorResponseInterface extends GenericResponseInterface {
+  data: {
+    deletedAuthorId: string;
+  };
 }
 
 export class AuthorsResponseManager {
 
-  static From(authors: AuthorModel[]): AuthorsResponseInterface {
+  static From(authors: AuthorInterface[]): AuthorsResponseInterface {
     return {
       succeed: true,
       errorMessages: [],
@@ -18,7 +30,7 @@ export class AuthorsResponseManager {
     };
   }
 
-  static Response(authors: AuthorModel[]): Observable<AuthorsResponseInterface> {
+  static Response(authors: AuthorInterface[]): Observable<AuthorsResponseInterface> {
     const response = AuthorsResponseManager.From(authors);
     return new Observable<AuthorsResponseInterface>(observable => {
       observable.next(response);

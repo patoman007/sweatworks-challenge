@@ -1,18 +1,29 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { PublicationFormDialogDataInterface, PublicationFormManager, PublicationFormMode } from './publication-form.manager';
+import {
+  PublicationFormDialogDataInterface,
+  PublicationFormManager,
+  PublicationFormMode
+} from './publication-form.manager';
 
 import { PublicationsService } from '../../services/publications.service';
 import { AuthorsService } from '../../../shared/authors/authors.service';
 
 import { AuthorModel } from '../../../shared/authors/authors.manager';
 
-import { AuthorsResponseInterface } from '../../../shared/authors/authors-response.manager';
+import {
+  AuthorsResponseInterface
+} from '../../../shared/authors/authors-response.manager';
 
-import { PublicationInterface, PublicationModel } from '../../../shared/publications/publications.manager';
+import {
+  PublicationInterface,
+  PublicationModel
+} from '../../../shared/publications/publications.manager';
 
-import { NewPublicationResponseInterface } from '../../../shared/publications/publications-response.manager';
+import {
+  NewPublicationResponseInterface
+} from '../../../shared/publications/publications-response.manager';
 
 
 @Component({

@@ -1,7 +1,6 @@
 enum PublicationsPaths {
   index = '',
-  publicationsList = 'publications',
-  publicationById = 'publications:id'
+  publicationsList = 'list',
 }
 
 export default PublicationsPaths;

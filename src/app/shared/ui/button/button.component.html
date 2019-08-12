@@ -1,7 +1,7 @@
 <ng-container *ngIf="model && model.type === 'basic'">
   <button mat-button
           [ngStyle]="{ 'color': model.fontColor, 'backgroundColor': model.bgColor }"
-          (click)="model.onClick()">
+          (click)="model.onClick">
     {{ model.label }}
   </button>
 </ng-container>

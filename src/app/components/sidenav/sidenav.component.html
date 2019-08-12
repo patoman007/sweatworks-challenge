@@ -1,3 +1,19 @@
 <div class="container">
   <app-authors-list></app-authors-list>
+
+  <div class="action-buttons">
+    <h4>Sections</h4>
+
+    <div>
+      <app-ui-button [model]="data.actionButtons.publications"
+                     (click)="publications()">
+      </app-ui-button>
+    </div>
+
+    <div>
+      <app-ui-button [model]="data.actionButtons.authorsManagement"
+                     (click)="authorsManagement()">
+      </app-ui-button>
+    </div>
+  </div>
 </div>

@@ -8,7 +8,8 @@
 <ng-template #loadedPublicationsListTemplate>
   <ng-container *ngIf="shouldShowLoadingErrorMessage; else publicationsListTemplate">
     <div class="error-message">
-      <app-ui-alert-message [model]="model.alertMessages.loadingPublicationsErrorMessage"></app-ui-alert-message>
+      <app-ui-alert-message [model]="model.alertMessages.loadingPublicationsErrorMessage">
+      </app-ui-alert-message>
     </div>
   </ng-container>
 </ng-template>

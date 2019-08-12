@@ -1,0 +1,41 @@
+.container {
+  .form-information {
+    padding: 6px 0;
+
+    p {
+      padding: 0;
+      margin: 0;
+      color: #5CB85C;
+    }
+  }
+
+  .error {
+    p {
+      color: #D9534F;
+    }
+  }
+
+  .actions {
+    margin: 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    .form {
+      max-width: 415px;
+      margin: auto;
+    }
+
+    .form-information {
+      padding: 12px 0;
+      p {
+        text-align: center;
+      }
+    }
+
+    .actions {
+      margin: 10px 20px;
+    }
+  }
+}

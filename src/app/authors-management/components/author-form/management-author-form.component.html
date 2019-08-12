@@ -1,0 +1,25 @@
+<div class="container">
+  <div mat-dialog-title>
+    <app-ui-section-header [model]="model.sectionHeader"></app-ui-section-header>
+  </div>
+
+  <div class="form" mat-dialog-content>
+    <ng-container *ngFor="let input of model.authorForm">
+      <app-form-input [model]="input"></app-form-input>
+    </ng-container>
+  </div>
+
+  <div class="form-information" [ngClass]="{ 'error': model.informationIsAnError }">
+    <div *ngIf="model.requesting">
+      <app-ui-progress-bar [label]="requestingLabel"></app-ui-progress-bar>
+    </div>
+
+    <ng-container *ngIf="model.informationMessage">
+      <p>{{ model.informationMessage }}</p>
+    </ng-container>
+  </div>
+
+  <div class="actions">
+    <app-ui-cancel-confirm [model]="model.actions"></app-ui-cancel-confirm>
+  </div>
+</div>

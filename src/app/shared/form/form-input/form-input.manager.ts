@@ -41,4 +41,9 @@ export class FormInputManager {
     return FormInputManager.Control([Validators.required], formState);
   }
 
+  static EmailRequiredControl(formState: any = ''): FormControl {
+    const validators = [Validators.required, Validators.email];
+    return FormInputManager.Control(validators, formState);
+  }
+
 }

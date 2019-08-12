@@ -34,7 +34,7 @@ export class AuthorsListManager {
     header: 'Authors',
     loadingAuthors: 'Loading data ...',
     loadingAuthorsError: 'An error has occurred when trying to retrieve authors 😩',
-    emptyAuthors: 'Usps! No authors were found 😩, dare to create the first one!'
+    emptyAuthors: 'Usps! No authors were found 😩'
   };
 
   private static Messages: AuthorsListDataMessagesInterface = {
