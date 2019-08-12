@@ -1,27 +1,26 @@
-# SweatworksChallenge
+# Sweatworks - Challenge
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.0.
 
-## Development server
+## Local - (Static responses)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server.
+Navigate to `http://localhost:4200/`. 
+The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Dev - (LocalDynamoDB)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb` 
+to start DynamoDB locally, 
+After DynamoDB has been initialized, run `ng serve --configuration=dev` and it will automatically load the 'Development' environment.
 
-## Build
+Run `ng serve` for a dev server.
+Navigate to `http://localhost:4200/`. 
+The app will automatically reload if you change any of the source files.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Production server
 
-## Running unit tests
+For a production version run `ng build --prod --configuration=production`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+# Demo
+I've configured an Nginx server to serve a production version of the app. It can be find at [[Sweatworks challenge](http://ec2-3-83-122-66.compute-1.amazonaws.com/)]

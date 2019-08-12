@@ -19,12 +19,12 @@ export class SidenavComponent {
 
   constructor(private router: Router) { }
 
-  private publications() {
+  publications() {
     const commands = [AppPaths.PublicationsList, PublicationsPaths.index];
     this.router.navigate(commands).then();
   }
 
-  private authorsManagement() {
+  authorsManagement() {
     const commands = [AppPaths.AuthorsManagement, AuthorsManagementPaths.index];
     this.router.navigate(commands).then();
   }

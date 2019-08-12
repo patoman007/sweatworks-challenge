@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   webServices: {
-    base: 'https://srkaptm3c0.execute-api.us-west-2.amazonaws.com/dev/api/v1/',
+    base: 'https://f0znmhbp6l.execute-api.us-west-2.amazonaws.com/dev/api/v1/',
     endpoints: {
       publications: {
         create: 'publications/new',

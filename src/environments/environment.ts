@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   webServices: {
     base: 'http://localhost:4200/assets/api/v1/',
     endpoints: {
